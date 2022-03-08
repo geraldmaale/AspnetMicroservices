@@ -1,5 +1,4 @@
-﻿using Catalog.API.Entities;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
 
 namespace Catalog.API.Data;
 
@@ -7,30 +6,22 @@ public class CatalogContext : ICatalogContext
 {
     private readonly IConfiguration _configuration;
 
-    public CatalogContext(IConfiguration configuration)
+    public IMongoCollection<T> ConnectToMongo<T>(string? collection)
     {
-        _configuration = configuration;
-
-        // connect to the database with username and password
-        var credentials = configuration.GetValue<string>("DatabaseSettings:Credentials");
-        var databaseConn = configuration.GetValue<string>("DatabaseSettings:DatabaseName");
+        var credentials = _configuration.GetValue<string>("DatabaseSettings:Credentials");
+        var databaseConn = _configuration.GetValue<string>("DatabaseSettings:DatabaseName");
         var connectionStringWithCredentials = $"{credentials}/{databaseConn}/?authSource=admin";
-
-        Console.WriteLine(connectionStringWithCredentials);
 
         var clientWithCredentials = new MongoClient(connectionStringWithCredentials);
         var databaseWithCredentials = clientWithCredentials.GetDatabase(databaseConn);
 
-        // No credentials
-        //var connectionString = configuration.GetValue<string>("DatabaseSettings:ConnectionString");
-        //var client = new MongoClient(connectionString);
-        //var database = client.GetDatabase(configuration.GetValue<string>("DatabaseSettings:DatabaseName"));
-
-        Products = databaseWithCredentials.GetCollection<Product>(configuration.GetValue<string>("DatabaseSettings:CollectionName"));
-
-        // Seed catalog data
-        CatalogContextSeed.SeedData(Products);
+        var collectionResults = databaseWithCredentials.GetCollection<T>(collection);
+        return collectionResults;
     }
 
-    public IMongoCollection<Product> Products { get; }
+    public CatalogContext(IConfiguration configuration)
+    {
+        _configuration = configuration;
+    }
+
 }

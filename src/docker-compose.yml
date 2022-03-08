@@ -12,6 +12,15 @@ services:
     volumes:
       - catalog-mongo-data:/data/db
 
+  redis:
+    image: redis
+    container_name: redis-api
+    restart: on-failure
+    ports: 
+      - 6379:6379    
+    volumes:
+      - redis-data:/data
+
   catalog.api:
     container_name: "catalog-api"
     image: ${DOCKER_REGISTRY-}catalogapi
@@ -21,6 +30,9 @@ services:
     environment:
       - DatabaseSettings:Credentials=mongodb://appuser:Password1@catalogdb:27017
       - DatabaseSettings:DatabaseName=ProductsDb
+  
+
 
 volumes:
-  catalog-mongo-data:    
+  catalog-mongo-data:   
+  redis-data:

@@ -1,9 +1,8 @@
-﻿using Catalog.API.Entities;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
 
 namespace Catalog.API.Data;
 
 public interface ICatalogContext
 {
-    IMongoCollection<Product> Products { get; }
+    IMongoCollection<T> ConnectToMongo<T>(string? collection);
 }
