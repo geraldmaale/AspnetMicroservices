@@ -15,13 +15,16 @@ public class CatalogContext : ICatalogContext
         var credentials = configuration.GetValue<string>("DatabaseSettings:Credentials");
         var databaseConn = configuration.GetValue<string>("DatabaseSettings:DatabaseName");
         var connectionStringWithCredentials = $"{credentials}/{databaseConn}/?authSource=admin";
+
+        Console.WriteLine(connectionStringWithCredentials);
+
         var clientWithCredentials = new MongoClient(connectionStringWithCredentials);
-        var databaseWithCredentials = clientWithCredentials.GetDatabase(configuration.GetValue<string>("DatabaseSettings:DatabaseName"));
+        var databaseWithCredentials = clientWithCredentials.GetDatabase(databaseConn);
 
         // No credentials
-        var connectionString = configuration.GetValue<string>("DatabaseSettings:ConnectionString");
-        var client = new MongoClient(connectionString);
-        var database = client.GetDatabase(configuration.GetValue<string>("DatabaseSettings:DatabaseName"));
+        //var connectionString = configuration.GetValue<string>("DatabaseSettings:ConnectionString");
+        //var client = new MongoClient(connectionString);
+        //var database = client.GetDatabase(configuration.GetValue<string>("DatabaseSettings:DatabaseName"));
 
         Products = databaseWithCredentials.GetCollection<Product>(configuration.GetValue<string>("DatabaseSettings:CollectionName"));
 

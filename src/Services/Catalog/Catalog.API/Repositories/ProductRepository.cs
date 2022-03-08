@@ -42,13 +42,13 @@ public class ProductRepository : IProductRepository
 
     public async Task<IEnumerable<Product>> GetAllAsync()
     {
-        var products = await _context.Products.Find(p=> true).ToListAsync();
+        var products = await _context.Products.Find(p => true).ToListAsync();
         return products;
     }
 
     public async Task<IEnumerable<Product>> GetByCategoryAsync(string name)
     {
-        FilterDefinition<Product> filter = Builders<Product>.Filter.Eq(p=>p.Category, name);
+        FilterDefinition<Product> filter = Builders<Product>.Filter.Eq(p => p.Category, name);
 
         var products = await _context.Products.Find(filter).ToListAsync();
         return products;
@@ -56,13 +56,13 @@ public class ProductRepository : IProductRepository
 
     public async Task<Product> GetByIdAsync(string id)
     {
-        var product = await _context.Products.Find(p=>p.Id == id).FirstOrDefaultAsync();
+        var product = await _context.Products.Find(p => p.Id == id).FirstOrDefaultAsync();
         return product;
     }
 
     public async Task<IEnumerable<Product>> GetByNameAsync(string name)
     {
-        FilterDefinition<Product> filter = Builders<Product>.Filter.Eq(p=>p.Name, name);
+        FilterDefinition<Product> filter = Builders<Product>.Filter.Eq(p => p.Name, name);
 
         var products = await _context.Products.Find(filter).ToListAsync();
         return products;
@@ -70,7 +70,7 @@ public class ProductRepository : IProductRepository
 
     public async Task<bool> Update(Product product)
     {
-        var result = await _context.Products.ReplaceOneAsync(filter: p=>p.Id == product.Id, replacement: product);
+        var result = await _context.Products.ReplaceOneAsync(filter: p => p.Id == product.Id, replacement: product);
         return result.IsAcknowledged && result.ModifiedCount > 0;
     }
 }

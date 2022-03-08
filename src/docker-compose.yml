@@ -1,29 +1,26 @@
-version: '3.8'
+version: '3.4'
 
 services:
- 
-  mongodb-server-catalog:
+  catalogdb:
     image: mongo
-    container_name: mongo-server-catalog
-    restart: on-failure
+    container_name: catalog-mongo-server
     environment: 
       - MONGO_INITDB_ROOT_USERNAME=appuser
       - MONGO_INITDB_ROOT_PASSWORD=Password1
     ports: 
-      - 27018:27017    
+      - 27017:27017
     volumes:
-      - mongo-data-catalog:/data/db
+      - catalog-mongo-data:/data/db
 
-  mongodb-server:
-    image: mongo
-    container_name: mongo-server
-    restart: on-failure
-    ports: 
-      - 27017:27017    
-    volumes:
-      - mongo-data:/data/db
+  catalog.api:
+    container_name: "catalog-api"
+    image: ${DOCKER_REGISTRY-}catalogapi
+    build:
+      context: .
+      dockerfile: Services/Catalog/Catalog.API/Dockerfile    
+    environment:
+      - DatabaseSettings:Credentials=mongodb://appuser:Password1@catalogdb:27017
+      - DatabaseSettings:DatabaseName=ProductsDb
 
 volumes:
-  mongo-data-catalog:
-  mongo-data:
-    
+  catalog-mongo-data:    

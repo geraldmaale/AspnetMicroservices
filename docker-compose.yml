@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+ 
+  mongodb-server:
+    image: mongo
+    container_name: mongo-server
+    restart: on-failure
+    environment: 
+      - MONGO_INITDB_ROOT_USERNAME=appuser
+      - MONGO_INITDB_ROOT_PASSWORD=Password1
+    ports: 
+      - 27018:27017    
+    volumes:
+      - mongo-data:/data/db
+
+  # mongodb-server:
+  #   image: mongo
+  #   container_name: mongo-server
+  #   restart: on-failure
+  #   ports: 
+  #     - 27017:27017    
+  #   volumes:
+  #     - mongo-data:/data/db
+
+volumes:
+  mongo-data:
+  # mongo-data:
+    
