@@ -76,6 +76,7 @@ services:
       dockerfile: Services/Basket/Basket.API/Dockerfile
     environment:
       - Redis:ConnectionString=basketdb:6379
+      - GrpcSettings:DiscountUrl=discount.api:8002
     depends_on:
      - basketdb
     ports:

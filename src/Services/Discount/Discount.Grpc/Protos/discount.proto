@@ -3,6 +3,8 @@ syntax = "proto3";
 option csharp_namespace = "Discount.Grpc.Protos";
 
 service DiscountProtoService {
+
+	// Get discount coupon
 	rpc GetDiscount (GetDiscountRequest) returns (CouponModel);
 
 	// Create a new discount coupon
@@ -19,7 +21,7 @@ message CouponModel {
 	int32 id = 1;
 	string productName = 2;
 	string description = 3;
-	string amount = 4;
+	double amount = 4;
 }
 
 message GetDiscountRequest {

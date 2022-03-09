@@ -1,3 +1,4 @@
+using Discount.Grpc.Services;
 using Discount.Shared.Extensions;
 using Discount.Shared.Repositories;
 
@@ -18,7 +19,8 @@ var app = builder.Build();
 // Run migration
 MigrationExtension<Program>.MigrateDatabase(app);
 
-// app.MapGrpcService<>();
+
+app.MapGrpcService<DiscountService>();
 app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client.");
 
 app.Run();

@@ -1,5 +1,6 @@
 ﻿using System.Net.Mime;
 using Basket.API.Entities;
+using Basket.API.GrpcServices;
 using Basket.API.Repositories;
 using GreatIdeas.Extensions;
 using MapsterMapper;
@@ -15,12 +16,16 @@ public class BasketController : ControllerBase
 {
     private readonly IBasketRepository _basketRepository;
     private readonly ILogger<BasketController> _logger;
+    private readonly DiscountGrpcService _discountGrpcService;
     private IMapper _mapper = new Mapper();
 
-    public BasketController(IBasketRepository basketRepository, ILogger<BasketController> logger)
+    public BasketController(IBasketRepository basketRepository,
+        ILogger<BasketController> logger,
+        DiscountGrpcService discountGrpcService)
     {
         _basketRepository = basketRepository ?? throw new ArgumentNullException(nameof(basketRepository));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _discountGrpcService = discountGrpcService ?? throw new ArgumentNullException(nameof(discountGrpcService));
     }
 
 
@@ -62,6 +67,15 @@ public class BasketController : ControllerBase
     {
         try
         {
+            // Communicate with Discount.Grpc
+            // and Calculate the latest prices of products into the shopping cart
+            foreach (var item in shoppingCart.Items)
+            {
+                var coupon = await _discountGrpcService.GetDiscountAsync(item.ProductName!);
+
+                item.Price -= (decimal)coupon.Amount;
+            }
+
             var result = await _basketRepository.UpdateAsync(shoppingCart);
 
             _logger.LogInformation($"Basket with username: {shoppingCart.UserName} updated successfully");

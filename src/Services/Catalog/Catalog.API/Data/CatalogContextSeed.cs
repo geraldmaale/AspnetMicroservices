@@ -18,7 +18,7 @@ public class CatalogContextSeed
         {
 
             productCollection.InsertManyAsync(GetPreconfiguredProducts(categoryCollection));
-        }        
+        }
     }
 
     private static IEnumerable<Product> GetPreconfiguredProducts(IMongoCollection<Category> categoryCollection)
@@ -96,19 +96,24 @@ public class CatalogContextSeed
             {
                 new Category()
                 {
-                    Name = "Underwear",
-                    Description = "Underwear"
+                    Name = "IPhone",
+                    Description = "IPhone category"
                 },
                 new Category()
                 {
-                    Name = "Trousers",
-                    Description = "Trousers"
+                    Name = "Samsung",
+                    Description = "Samsung phones"
                 },
                 new Category()
                 {
-                    Name = "T-Shirt",
-                    Description = "T-Shirt"
-                }            
+                    Name = "Huawei",
+                    Description = "Huawei phones"
+                },
+                new Category()
+                {
+                    Name = "Xiaomi",
+                    Description = "Xiaomi phones"
+                }
             };
     }
 }
