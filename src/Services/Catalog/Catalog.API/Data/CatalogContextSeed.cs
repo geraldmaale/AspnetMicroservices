@@ -7,12 +7,18 @@ public class CatalogContextSeed
 {
     public static void SeedData(IMongoCollection<Product> productCollection, IMongoCollection<Category> categoryCollection)
     {
+        bool existCategory = categoryCollection.Find(c => true).Any();
+        if (!existCategory)
+        {
+            categoryCollection.InsertManyAsync(GetPreconfiguredCategories());
+        }
+
         bool existProduct = productCollection.Find(p => true).Any();
         if (!existProduct)
         {
 
             productCollection.InsertManyAsync(GetPreconfiguredProducts(categoryCollection));
-        }
+        }        
     }
 
     private static IEnumerable<Product> GetPreconfiguredProducts(IMongoCollection<Category> categoryCollection)
@@ -81,6 +87,28 @@ public class CatalogContextSeed
                     Price = 240.00M,
                     Category = categories.First()
                 }
+            };
+    }
+
+    private static IEnumerable<Category> GetPreconfiguredCategories()
+    {
+        return new List<Category>()
+            {
+                new Category()
+                {
+                    Name = "Underwear",
+                    Description = "Underwear"
+                },
+                new Category()
+                {
+                    Name = "Trousers",
+                    Description = "Trousers"
+                },
+                new Category()
+                {
+                    Name = "T-Shirt",
+                    Description = "T-Shirt"
+                }            
             };
     }
 }

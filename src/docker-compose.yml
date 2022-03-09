@@ -3,7 +3,7 @@ version: '3.4'
 services:
   catalogdb:
     image: mongo
-    container_name: catalog-mongo-server
+    container_name: catalog-mongo-db
     environment: 
       - MONGO_INITDB_ROOT_USERNAME=appuser
       - MONGO_INITDB_ROOT_PASSWORD=Password1
@@ -12,27 +12,50 @@ services:
     volumes:
       - catalog-mongo-data:/data/db
 
-  redis:
+  redisdb:
     image: redis
-    container_name: redis-api
+    container_name: redis-db
     restart: on-failure
     ports: 
       - 6379:6379    
     volumes:
       - redis-data:/data
 
+  portainer:
+    image: portainer/portainer-ce
+    container_name: portainer
+    restart: always
+    ports:
+      - 8080:8000
+      - 9443:9443
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    environment:
+      - PORT=9000
+
   catalog.api:
-    container_name: "catalog-api"
+    container_name: catalog-api
     image: ${DOCKER_REGISTRY-}catalogapi
     build:
       context: .
       dockerfile: Services/Catalog/Catalog.API/Dockerfile    
     environment:
       - DatabaseSettings:Credentials=mongodb://appuser:Password1@catalogdb:27017
-      - DatabaseSettings:DatabaseName=ProductsDb
-  
+      - DatabaseSettings:DatabaseName=CatalogDb
 
+  basket.api:
+    image: ${DOCKER_REGISTRY-}basketapi
+    container_name: basket-api
+    build:
+      context: .
+      dockerfile: Services/Basket/Basket.API/Dockerfile
+    environment:
+      - Redis:ConnectionString=redisdb:6379
+    depends_on:
+     - redisdb
 
 volumes:
   catalog-mongo-data:   
   redis-data:
+  portainer_data:

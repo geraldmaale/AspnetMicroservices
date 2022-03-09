@@ -74,7 +74,7 @@ public class BasketController : ControllerBase
         }
     }
 
-    [HttpDelete("{basketId:length(24)}", Name = "DeleteBasket")]
+    [HttpDelete("{username}", Name = "DeleteBasket")]
     [ProducesResponseType(StatusCodes.Status204NoContent, Type = typeof(ApiResult))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ApiResult))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ApiResult))]
