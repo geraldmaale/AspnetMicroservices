@@ -5,17 +5,20 @@ namespace Catalog.API.Data;
 
 public class CatalogContextSeed
 {
-    public static void SeedData(IMongoCollection<Product> productCollection)
+    public static void SeedData(IMongoCollection<Product> productCollection, IMongoCollection<Category> categoryCollection)
     {
         bool existProduct = productCollection.Find(p => true).Any();
         if (!existProduct)
         {
-            productCollection.InsertManyAsync(GetPreconfiguredProducts());
+
+            productCollection.InsertManyAsync(GetPreconfiguredProducts(categoryCollection));
         }
     }
 
-    private static IEnumerable<Product> GetPreconfiguredProducts()
+    private static IEnumerable<Product> GetPreconfiguredProducts(IMongoCollection<Category> categoryCollection)
     {
+        var categories = categoryCollection.FindAsync(_ => true).Result.ToList();
+
         return new List<Product>()
             {
                 new Product()
@@ -26,7 +29,7 @@ public class CatalogContextSeed
                     Description = "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut, tenetur natus doloremque laborum quos iste ipsum rerum obcaecati impedit odit illo dolorum ab tempora nihil dicta earum fugiat. Temporibus, voluptatibus. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut, tenetur natus doloremque laborum quos iste ipsum rerum obcaecati impedit odit illo dolorum ab tempora nihil dicta earum fugiat. Temporibus, voluptatibus.",
                     ImageFile = "product-1.png",
                     Price = 950.00M,
-                    Category = "Smart Phone"
+                    Category = categories.First()
                 },
                 new Product()
                 {
@@ -36,7 +39,7 @@ public class CatalogContextSeed
                     Description = "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut, tenetur natus doloremque laborum quos iste ipsum rerum obcaecati impedit odit illo dolorum ab tempora nihil dicta earum fugiat. Temporibus, voluptatibus. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut, tenetur natus doloremque laborum quos iste ipsum rerum obcaecati impedit odit illo dolorum ab tempora nihil dicta earum fugiat. Temporibus, voluptatibus.",
                     ImageFile = "product-2.png",
                     Price = 840.00M,
-                    Category = "Smart Phone"
+                    Category = categories.Last()
                 },
                 new Product()
                 {
@@ -46,7 +49,7 @@ public class CatalogContextSeed
                     Description = "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut, tenetur natus doloremque laborum quos iste ipsum rerum obcaecati impedit odit illo dolorum ab tempora nihil dicta earum fugiat. Temporibus, voluptatibus. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut, tenetur natus doloremque laborum quos iste ipsum rerum obcaecati impedit odit illo dolorum ab tempora nihil dicta earum fugiat. Temporibus, voluptatibus.",
                     ImageFile = "product-3.png",
                     Price = 650.00M,
-                    Category = "White Appliances"
+                    Category = categories.First()
                 },
                 new Product()
                 {
@@ -56,7 +59,7 @@ public class CatalogContextSeed
                     Description = "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut, tenetur natus doloremque laborum quos iste ipsum rerum obcaecati impedit odit illo dolorum ab tempora nihil dicta earum fugiat. Temporibus, voluptatibus. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut, tenetur natus doloremque laborum quos iste ipsum rerum obcaecati impedit odit illo dolorum ab tempora nihil dicta earum fugiat. Temporibus, voluptatibus.",
                     ImageFile = "product-4.png",
                     Price = 470.00M,
-                    Category = "White Appliances"
+                    Category = categories.First()
                 },
                 new Product()
                 {
@@ -66,7 +69,7 @@ public class CatalogContextSeed
                     Description = "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut, tenetur natus doloremque laborum quos iste ipsum rerum obcaecati impedit odit illo dolorum ab tempora nihil dicta earum fugiat. Temporibus, voluptatibus. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut, tenetur natus doloremque laborum quos iste ipsum rerum obcaecati impedit odit illo dolorum ab tempora nihil dicta earum fugiat. Temporibus, voluptatibus.",
                     ImageFile = "product-5.png",
                     Price = 380.00M,
-                    Category = "Smart Phone"
+                    Category = categories.Last()
                 },
                 new Product()
                 {
@@ -76,7 +79,7 @@ public class CatalogContextSeed
                     Description = "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut, tenetur natus doloremque laborum quos iste ipsum rerum obcaecati impedit odit illo dolorum ab tempora nihil dicta earum fugiat. Temporibus, voluptatibus. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut, tenetur natus doloremque laborum quos iste ipsum rerum obcaecati impedit odit illo dolorum ab tempora nihil dicta earum fugiat. Temporibus, voluptatibus.",
                     ImageFile = "product-6.png",
                     Price = 240.00M,
-                    Category = "Home Kitchen"
+                    Category = categories.First()
                 }
             };
     }

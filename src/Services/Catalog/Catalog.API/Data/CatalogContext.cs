@@ -4,6 +4,9 @@ namespace Catalog.API.Data;
 
 public class CatalogContext : ICatalogContext
 {
+    public const string CategoryCollection = "Category";
+    public const string ProductCollection = "Product";
+
     private readonly IConfiguration _configuration;
 
     public IMongoCollection<T> ConnectToMongo<T>(string? collection)

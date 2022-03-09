@@ -82,7 +82,7 @@ public class CategoryController : ControllerBase
             await _categoryRepository.CreateAsync(entity);
 
             _logger.LogInformation($"Category: {category.Name} created successfully");
-            return CreatedAtRoute(nameof(GetCategory), new { categoryId = entity.Id }, category);
+            return CreatedAtRoute(nameof(GetCategory), new { categoryId = entity.Id }, entity);
         }
         catch (Exception ex)
         {
@@ -100,7 +100,7 @@ public class CategoryController : ControllerBase
         try
         {
             var entityToUpdate = _mapper.Map<Category>(category);
-            var result = await _categoryRepository.UpdateAsync(entityToUpdate, c => c.Id == entityToUpdate.Id);
+            var result = await _categoryRepository.UpdateAsync(entityToUpdate, FilterId(entityToUpdate.Id));
             if (!result)
             {
                 _logger.LogError($"Failed to update category with id {entityToUpdate.Id}");
@@ -142,7 +142,7 @@ public class CategoryController : ControllerBase
         }
     }
 
-    private FilterDefinition<Category> FilterId(string categoryId)
+    private FilterDefinition<Category> FilterId(string? categoryId)
     {
         FilterDefinition<Category> filter = Builders<Category>.Filter.Eq(p => p.Id, categoryId);
         return filter;

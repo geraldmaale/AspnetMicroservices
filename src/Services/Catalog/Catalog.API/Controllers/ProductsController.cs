@@ -3,6 +3,7 @@ using Catalog.API.Entities;
 using Catalog.API.Repositories;
 using GreatIdeas.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Driver;
 
 namespace Catalog.API.Controllers;
 
@@ -44,7 +45,7 @@ public class ProductsController : ControllerBase
     {
         try
         {
-            var product = await _productRepository.GetByIdAsync(productId);
+            var product = await _productRepository.GetByIdAsync(p => p.Id == productId);
             if (product == null)
             {
                 _logger.LogError($"Product with id {productId} not found");
@@ -110,7 +111,7 @@ public class ProductsController : ControllerBase
     {
         try
         {
-            await _productRepository.Create(product);
+            await _productRepository.CreateAsync(product);
             _logger.LogInformation($"Product: {product.Name} created successfully");
             return CreatedAtRoute(nameof(GetProduct), new { productId = product.Id }, product);
         }
@@ -129,7 +130,7 @@ public class ProductsController : ControllerBase
     {
         try
         {
-            var result = await _productRepository.Update(product);
+            var result = await _productRepository.UpdateAsync(product, FilterId(productId));
             if (!result)
             {
                 _logger.LogError($"Failed to update product with id {productId}");
@@ -154,7 +155,7 @@ public class ProductsController : ControllerBase
     {
         try
         {
-            var result = await _productRepository.Delete(productId);
+            var result = await _productRepository.DeleteAsync(FilterId(productId));
             if (!result)
             {
                 _logger.LogError($"Failed to delete product with id {productId}");
@@ -169,6 +170,12 @@ public class ProductsController : ControllerBase
             _logger.LogError(ex, $"Failed to delete product: {ex.Message}");
             return UnprocessableEntity(new ApiResult() { Message = $"Failed to delete products: {productId}" });
         }
+    }
+
+    private FilterDefinition<Product> FilterId(string? productId)
+    {
+        var filter = Builders<Product>.Filter.Eq(p => p.Id, productId);
+        return filter;
     }
 
 }

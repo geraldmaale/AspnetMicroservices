@@ -1,4 +1,5 @@
 using Catalog.API.Data;
+using Catalog.API.Entities;
 using Catalog.API.Repositories;
 using Catalog.API.Validators;
 using FluentValidation.AspNetCore;
@@ -19,6 +20,12 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<ICatalogContext, CatalogContext>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+
+// Seed
+var mongoContext = new CatalogContext(builder.Configuration);
+var productCollection = mongoContext.ConnectToMongo<Product>(CatalogContext.ProductCollection);
+var categoryCollection = mongoContext.ConnectToMongo<Category>(CatalogContext.CategoryCollection);
+CatalogContextSeed.SeedData(productCollection, categoryCollection);
 
 
 var app = builder.Build();

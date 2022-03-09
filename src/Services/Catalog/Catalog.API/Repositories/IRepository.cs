@@ -9,6 +9,6 @@ public interface IRepository<T>
     Task<T> GetByIdAsync(Expression<Func<T, bool>> predicate);
     Task<T> GetByNameAsync(FilterDefinition<T> predicate);
     Task CreateAsync(T item);
-    Task<bool> UpdateAsync(T item, Expression<Func<T, bool>> predicate);
+    Task<bool> UpdateAsync(T item, FilterDefinition<T> predicate);
     Task<bool> DeleteAsync(FilterDefinition<T> predicate);
 }
