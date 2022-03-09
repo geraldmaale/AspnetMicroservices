@@ -1,4 +1,4 @@
-﻿namespace Discount.API.Entities;
+﻿namespace Discount.Shared.Entities;
 
 public class Coupon
 {

@@ -1,6 +1,6 @@
-﻿using Discount.API.Entities;
+﻿using Discount.Shared.Entities;
 
-namespace Discount.API.Repositories;
+namespace Discount.Shared.Repositories;
 public interface IDiscountDapperRepository
 {
     Task<Coupon> GetByProductNameAsync(string productName);

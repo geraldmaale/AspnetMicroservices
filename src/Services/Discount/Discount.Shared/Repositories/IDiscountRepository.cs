@@ -1,8 +1,8 @@
-﻿using Discount.API.Data;
-using Discount.API.Entities;
+﻿using Discount.Shared.Data;
+using Discount.Shared.Entities;
 using GreatIdeas.Repository;
 
-namespace Discount.API.Repositories;
+namespace Discount.Shared.Repositories;
 
 public interface IDiscountRepository : IRepositoryFactory<ApplicationDbContext, Coupon>
 {

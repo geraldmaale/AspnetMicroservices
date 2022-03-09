@@ -1,15 +1,16 @@
 ﻿using Dapper;
-using Discount.API.Entities;
+using Discount.Shared.Entities;
+using Microsoft.Extensions.Configuration;
 using Npgsql;
 
-namespace Discount.API.Repositories;
+namespace Discount.Shared.Repositories;
 public class DiscountDapperRepository : IDiscountDapperRepository
 {
     private readonly NpgsqlConnection _connection;
 
     public DiscountDapperRepository(IConfiguration configuration)
     {
-        var connection = new NpgsqlConnection(configuration.GetValue<string>("DatabaseSettings:ConnectionString"));
+        var connection = new NpgsqlConnection(configuration["DatabaseSettings:ConnectionString"]);
         using (_connection)
         {
             _connection = connection;

@@ -1,6 +1,6 @@
 ﻿using System.Net.Mime;
-using Discount.API.Entities;
-using Discount.API.Repositories;
+using Discount.Shared.Entities;
+using Discount.Shared.Repositories;
 using GreatIdeas.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,7 +32,6 @@ public class DiscountsController : ControllerBase
             if (coupon == null)
             {
                 return NotFound(new ApiResult() {
-                    IsSuccessful = true,
                     Message = $"Discount for {productName} not found"
                 });
             }

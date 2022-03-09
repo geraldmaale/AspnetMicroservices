@@ -1,7 +1,7 @@
-﻿using Discount.API.Entities;
+﻿using Discount.Shared.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Discount.API.Data;
+namespace Discount.Shared.Data;
 public class ApplicationDbContext : DbContext
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)

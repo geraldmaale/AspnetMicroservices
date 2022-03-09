@@ -1,35 +1,42 @@
-﻿using Discount.API.Data;
-using Discount.API.Entities;
+﻿using Discount.Shared.Data;
+using Discount.Shared.Entities;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
-using Npgsql;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
-namespace Discount.API.Extensions;
-public static class MigrationExtension
+namespace Discount.Shared.Extensions;
+public static class MigrationExtension<TContext>
 {
-    public static void MigrateDatabase(this IApplicationBuilder builder)
+    public static void MigrateDatabase(IApplicationBuilder builder)
     {
         using var scope = builder.ApplicationServices.CreateScope();
         var configuration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
-        var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+        var logger = scope.ServiceProvider.GetRequiredService<ILogger<TContext>>();
 
-        logger.LogInformation("Migrating database to  Postgres");
+        logger.LogInformation("Migrating database to Postgres ...");
 
         // Migrate EF Core
         using var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         context.Database.Migrate();
 
-        var coupons = new List<Coupon>()
+        if (!context.Coupons!.Any())
         {
-            new Coupon() {ProductName = "IPhone X", Description = "IPhone Discount", Amount = 150},
-            new Coupon() {ProductName = "Samsung 10", Description = "Samsung Discount", Amount = 120},
-        };
-        context.Coupons!.AddRange(coupons);
-        context.SaveChanges();
-        logger.LogInformation("Migrated database to Postgres using EF Core ...");
+            logger.LogInformation("Seeding into database ...");
+            var coupons = new List<Coupon>()
+            {
+                new Coupon() {ProductName = "IPhone X", Description = "IPhone Discount", Amount = 150},
+                new Coupon() {ProductName = "Samsung 10", Description = "Samsung Discount", Amount = 120},
+            };
+            context.Coupons!.AddRange(coupons);
+            context.SaveChanges();
+            logger.LogInformation("Seeding using EF Core completed ...");
+        }
 
 
         // Migrate Dapper
-        try
+        /*try
         {
             using var connection = new NpgsqlConnection(configuration.GetValue<string>("DatabaseSettings:ConnectionString"));
             connection.Open();
@@ -55,6 +62,6 @@ public static class MigrationExtension
         catch (Exception e)
         {
             logger.LogCritical(e, "An error occurred while migration the databases");
-        }
+        }*/
     }
 }

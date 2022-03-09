@@ -1,7 +1,12 @@
-﻿using Discount.API.Data;
+﻿using Discount.Shared.Data;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
-namespace Discount.API.Extensions;
+namespace Discount.Shared.Extensions;
 
 public enum DbProviders
 {
@@ -18,7 +23,7 @@ public static class DbContextServiceCollection
     {
         if (DbProvider == DbProviders.Postgres)
         {
-            var dbConnectionString = configuration.GetValue<string>("DatabaseSettings:ConnectionString");
+            var dbConnectionString = configuration["DatabaseSettings:ConnectionString"];
 
             // register factory and configure the options
             if (environment.IsDevelopment())
