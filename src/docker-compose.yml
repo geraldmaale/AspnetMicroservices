@@ -12,14 +12,38 @@ services:
     volumes:
       - catalog-mongo-data:/data/db
 
-  redisdb:
+  basketdb:
     image: redis
-    container_name: redis-db
+    container_name: basket-redis-db
     restart: on-failure
     ports: 
       - 6379:6379    
     volumes:
-      - redis-data:/data
+      - basket-data:/data
+
+  discountdb:
+    image: postgres
+    container_name: discount-postgres-db
+    restart: on-failure
+    environment: 
+      - POSTGRES_USER=appuser
+      - POSTGRES_PASSWORD=P@ssword1
+    ports: 
+      - 5432:5432    
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    restart: always
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=geraldmaale@gmail.com
+      - PGADMIN_DEFAULT_PASSWORD=P@ssword1
+    ports:
+      - 5050:80
+    volumes:
+      - pgadmin_data:/root/.pgadmin
 
   portainer:
     image: portainer/portainer-ce
@@ -31,8 +55,6 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer_data:/data
-    environment:
-      - PORT=9000
 
   catalog.api:
     container_name: catalog-api
@@ -43,6 +65,8 @@ services:
     environment:
       - DatabaseSettings:Credentials=mongodb://appuser:Password1@catalogdb:27017
       - DatabaseSettings:DatabaseName=CatalogDb
+    ports:
+      - "8000:80"
 
   basket.api:
     image: ${DOCKER_REGISTRY-}basketapi
@@ -51,11 +75,28 @@ services:
       context: .
       dockerfile: Services/Basket/Basket.API/Dockerfile
     environment:
-      - Redis:ConnectionString=redisdb:6379
+      - Redis:ConnectionString=basketdb:6379
     depends_on:
-     - redisdb
+     - basketdb
+    ports:
+      - "8001:80"
+
+  discount.api:
+    image: ${DOCKER_REGISTRY-}discountapi
+    container_name: discount-api
+    build:
+      context: .
+      dockerfile: Services/Discount/Discount.API/Dockerfile
+    environment:
+      - "DatabaseSettings:ConnectionString=Server=discountdb;Port=5432;Database=DiscountDb;User Id=appuser;Password=P@ssword1;"
+    depends_on:
+     - discountdb
+    ports:
+      - "8002:80"
 
 volumes:
   catalog-mongo-data:   
-  redis-data:
+  basket-data:
   portainer_data:
+  pgdata:
+  pgadmin_data:
