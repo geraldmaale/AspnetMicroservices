@@ -23,7 +23,7 @@ public static class DbContextServiceCollection
     {
         if (DbProvider == DbProviders.Postgres)
         {
-            var dbConnectionString = configuration["DatabaseSettings:ConnectionString"];
+            var dbConnectionString = configuration.GetValue<string>("DatabaseSettings:ConnectionString");
 
             // register factory and configure the options
             if (environment.IsDevelopment())

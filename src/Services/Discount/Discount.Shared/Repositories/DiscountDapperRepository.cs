@@ -10,7 +10,7 @@ public class DiscountDapperRepository : IDiscountDapperRepository
 
     public DiscountDapperRepository(IConfiguration configuration)
     {
-        var connection = new NpgsqlConnection(configuration["DatabaseSettings:ConnectionString"]);
+        var connection = new NpgsqlConnection(configuration.GetValue<string>("DatabaseSettings:ConnectionString"));
         using (_connection)
         {
             _connection = connection;
