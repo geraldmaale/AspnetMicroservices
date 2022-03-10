@@ -15,11 +15,6 @@ builder.Services.AddScoped<IDiscountRepository, DiscountRepository>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-// Run migration
-MigrationExtension<Program>.MigrateDatabase(app);
-
-
 app.MapGrpcService<DiscountService>();
 app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client.");
 

@@ -17,8 +17,4 @@
 		<ProjectReference Include="..\Discount.Shared\Discount.Shared.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Repositories\" />
-	</ItemGroup>
-
 </Project>

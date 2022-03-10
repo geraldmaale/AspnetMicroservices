@@ -17,15 +17,25 @@ public class DiscountGrpcService
         var couponModel = await _client.GetDiscountAsync(discountRequest);
         return couponModel;
     }
-
-    public static CouponModel GetCouponAsync(string productName, string grpcUrl)
+    
+    public async Task<CouponModel> CreateDiscountAsync(CouponModel couponModel)
     {
-        using var channel = GrpcChannel.ForAddress(grpcUrl);
-        var client = new DiscountProtoService.DiscountProtoServiceClient(channel);
-
-        var discountRequest = new GetDiscountRequest() { ProductName = productName };
-        var couponModel = client.GetDiscount(discountRequest);
-
-        return couponModel;
+        var addDiscountRequest = new CreateDiscountRequest(){ Coupon = couponModel };
+        var result = await _client.CreateDiscountAsync(addDiscountRequest);
+        return result;
+    }
+    
+    public async Task<CouponModel> UpdateDiscountAsync(CouponModel couponModel)
+    {
+        var updateDiscountRequest = new UpdateDiscountRequest(){ Coupon = couponModel };
+        var result = await _client.UpdateDiscountAsync(updateDiscountRequest);
+        return result;
+    }
+    
+    public async Task<bool> DeleteDiscountAsync(string productName)
+    {
+        var deleteDiscountRequest = new DeleteDiscountRequest(){ ProductName = productName };
+        var result = await _client.DeleteDiscountAsync(deleteDiscountRequest);
+        return result.Success;
     }
 }
