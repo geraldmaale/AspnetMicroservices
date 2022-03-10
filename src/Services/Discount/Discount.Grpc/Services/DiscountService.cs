@@ -34,7 +34,7 @@ public class DiscountService : DiscountProtoService.DiscountProtoServiceBase
 
     public override async Task<CouponModel> CreateDiscount(CreateDiscountRequest request, ServerCallContext context)
     {
-        var coupon = _mapper.Map<Coupon>(request);
+        var coupon = _mapper.Map<Coupon>(request.Coupon);
         _discountRepository.Insert(coupon);
         await _discountRepository.SaveChangesAsync();
 
@@ -75,6 +75,6 @@ public class DiscountService : DiscountProtoService.DiscountProtoServiceBase
         await _discountRepository.SaveChangesAsync();
 
         _logger.LogInformation($"Coupon with product name {coupon.ProductName} deleted successfully");
-        return new DeleteDiscountResponse();
+        return new DeleteDiscountResponse() { Success = true };
     }
 }

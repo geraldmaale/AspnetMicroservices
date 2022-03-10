@@ -1,6 +1,9 @@
+using System.Reflection;
+using Discount.Grpc.Mappers;
 using Discount.Grpc.Services;
 using Discount.Shared.Extensions;
 using Discount.Shared.Repositories;
+using Mapster;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +14,7 @@ builder.Services.RegisterDbContextServiceCollection(builder.Configuration, build
 builder.Services.AddScoped<IDiscountRepository, DiscountRepository>();
 
 // Mapster Mapping
-// TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetAssembly(typeof(ApplicationMappingRegister)));
+TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetAssembly(typeof(CouponMappingRegister))!);
 
 var app = builder.Build();
 
