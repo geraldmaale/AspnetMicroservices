@@ -11,9 +11,6 @@ builder.Services.AddControllers()
     .AddFluentValidation(fv =>
         fv.RegisterValidatorsFromAssemblyContaining<CategoryValidator>());
 
-// Mapster Mapping
-// TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetAssembly(typeof(ApplicationMappingRegister)));
-
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
