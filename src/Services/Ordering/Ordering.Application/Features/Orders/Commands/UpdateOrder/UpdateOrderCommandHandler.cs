@@ -1,4 +1,5 @@
-﻿using MapsterMapper;
+﻿using GreatIdeas.Extensions;
+using MapsterMapper;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Ordering.Application.Contracts.Infrastructure;
@@ -35,15 +36,15 @@ public class UpdateOrderCommandHandler: IRequestHandler<UpdateOrderCommand>
                 _logger.LogError($"Order with id: {request.Id} was not found.");
                 throw new NotFoundException(nameof(Order), request.Id);
             }
-            
+
             _mapper.Map(request, orderToUpdate);
             await _orderRepository.UpdateAsync(orderToUpdate);
-        
+
             _logger.LogInformation($"Order with id {request.Id} has been successfully updated");
-            
+
             // Send email to customer
             await SendEmailAsync(orderToUpdate);
-            
+
             return Unit.Value;
         }
         catch (Exception e)
