@@ -18,6 +18,9 @@ TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetAssembly(typeof(CouponMappingR
 
 var app = builder.Build();
 
+// Run migration
+MigrationExtension<Program>.MigrateDatabase(app);
+
 app.MapGrpcService<DiscountService>();
 app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client.");
 
