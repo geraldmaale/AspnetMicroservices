@@ -2,9 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 
 namespace Discount.Shared.Data;
-public class ApplicationDbContext : DbContext
+public class DiscountDbContext : DbContext
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+    public DiscountDbContext(DbContextOptions<DiscountDbContext> options)
         : base(options)
     {
     }

@@ -3,22 +3,22 @@ using Ordering.Domain.Common;
 
 namespace Ordering.Application.Contracts.Persistence
 {
-    public interface IAsyncRepository<T> where T : EntityBase
+    public interface IAsyncRepository<TEntity> where TEntity : EntityBase
     {
-        Task<IReadOnlyList<T>> GetAllAsync();
-        Task<IReadOnlyList<T>> GetByIdAsync(Expression<Func<T, bool>> predicate);
-        Task<IReadOnlyList<T>> GetByIdAsync(Expression<Func<T, bool>> predicate = null,
-            Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
+        Task<IReadOnlyList<TEntity>> GetAllAsync();
+        Task<IReadOnlyList<TEntity>> GetByIdAsync(Expression<Func<TEntity, bool>> predicate);
+        Task<IReadOnlyList<TEntity>> GetByIdAsync(Expression<Func<TEntity, bool>> predicate = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             string includeString = null,
             bool disableTracking = true);
-        Task<IReadOnlyList<T>> GetByIdAsync(Expression<Func<T, bool>> predicate = null,
-            Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
-            List<Expression<Func<T, object>>> includes = null,
+        Task<List<TEntity>> GetByIdAsync(Expression<Func<TEntity, bool>> predicate = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+            List<Expression<Func<TEntity, object>>> includes = null,
             bool disableTracking = true);
-        Task<T> GetByIdAsync(Guid id);
-        Task<T> AddAsync(T entity);
-        Task UpdateAsync(T entity);
-        Task DeleteAsync(T entity);
+        Task<TEntity?> GetByIdAsync(Guid id);
+        Task<TEntity> AddAsync(TEntity entity);
+        Task UpdateAsync(TEntity entity);
+        Task DeleteAsync(TEntity entity);
         Task DeleteAsync(Guid id);
     }
 }

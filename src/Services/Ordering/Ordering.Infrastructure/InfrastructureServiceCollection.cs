@@ -1,12 +1,17 @@
-﻿using Discount.Shared.Data;
+﻿using GreatIdeas.MailServices;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Ordering.Application.Contracts.Infrastructure;
+using Ordering.Application.Contracts.Persistence;
+using Ordering.Infrastructure.Data;
+using Ordering.Infrastructure.Mail;
+using Ordering.Infrastructure.Respositories;
 
-namespace Discount.Shared.Extensions;
+namespace Ordering.Infrastructure;
 
 public enum DbProviders
 {
@@ -14,13 +19,16 @@ public enum DbProviders
     MssqlServer,
 }
 
-public static class DbContextServiceCollection
+public static class InfrastructureServiceCollection
 {
     private static DbProviders DbProvider { get; set; } = DbProviders.Postgres;
 
-    public static IServiceCollection RegisterDbContextServiceCollection(this IServiceCollection services,
+    public static IServiceCollection AddInfrastructureServices(this IServiceCollection services,
         IConfiguration configuration, IWebHostEnvironment environment)
     {
+        // register the OrderContext
+        #region DbContext
+
         if (DbProvider == DbProviders.Postgres)
         {
             var dbConnectionString = configuration.GetValue<string>("DatabaseSettings:ConnectionString");
@@ -28,7 +36,7 @@ public static class DbContextServiceCollection
             // register factory and configure the options
             if (environment.IsDevelopment())
             {
-                services.AddDbContextFactory<DiscountDbContext>(options =>
+                services.AddDbContextFactory<OrderDbContext>(options =>
                     options.UseNpgsql(dbConnectionString)
                         .EnableSensitiveDataLogging()
                         .LogTo(Console.WriteLine, new[] { DbLoggerCategory.Database.Command.Name },
@@ -36,7 +44,7 @@ public static class DbContextServiceCollection
             }
             else
             {
-                services.AddDbContextFactory<DiscountDbContext>(options =>
+                services.AddDbContextFactory<OrderDbContext>(options =>
                     options.UseNpgsql(dbConnectionString)
                         .LogTo(Console.WriteLine, new[] { DbLoggerCategory.Database.Command.Name },
                             LogLevel.Error));
@@ -44,8 +52,20 @@ public static class DbContextServiceCollection
         }
 
         services.AddScoped(p =>
-            p.GetRequiredService<IDbContextFactory<DiscountDbContext>>()
+            p.GetRequiredService<IDbContextFactory<OrderDbContext>>()
                 .CreateDbContext());
+
+        #endregion
+        
+        // register repositories
+        services.AddScoped<IOrderRepository, OrderRepository>();
+        
+        // register email service
+        services.Configure<EmailSettings>(c=> configuration.GetSection(nameof(EmailSettings)));
+        services.AddTransient<ISendGridService, SendGridService>();
+        services.AddScoped<IEmailService, EmailService>();
+
+        services.AddMsGraphMailService(configuration);
 
         return services;
     }

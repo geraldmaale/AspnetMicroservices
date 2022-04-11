@@ -4,9 +4,9 @@ using GreatIdeas.Repository;
 using Microsoft.EntityFrameworkCore;
 
 namespace Discount.Shared.Repositories;
-public class DiscountRepository : RepositoryFactory<ApplicationDbContext, Coupon>, IDiscountRepository
+public class DiscountRepository : RepositoryFactory<DiscountDbContext, Coupon>, IDiscountRepository
 {
-    public DiscountRepository(IDbContextFactory<ApplicationDbContext> dbContextFactory) : base(dbContextFactory)
+    public DiscountRepository(IDbContextFactory<DiscountDbContext> dbContextFactory) : base(dbContextFactory)
     {
     }
 }

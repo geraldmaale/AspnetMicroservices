@@ -67,7 +67,7 @@ public class UpdateOrderCommandHandler: IRequestHandler<UpdateOrderCommand>
                 From = "Order System"
             };
 
-            await _emailService.SendEmailAsync(email);
+            await _emailService.UseSendGrid(email);
             
             _logger.LogInformation($"Order email has been sent to {email.To}");
         }

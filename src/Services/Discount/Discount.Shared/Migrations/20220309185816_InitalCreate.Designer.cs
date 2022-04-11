@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Discount.Shared.Migrations
 {
-    [DbContext(typeof(ApplicationDbContext))]
+    [DbContext(typeof(DiscountDbContext))]
     [Migration("20220309185816_InitalCreate")]
     partial class InitalCreate
     {

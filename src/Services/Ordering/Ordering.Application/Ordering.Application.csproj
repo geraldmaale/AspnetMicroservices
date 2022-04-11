@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="GreatIdeas.Extensions" Version="1.2.2" />
+    <PackageReference Include="GreatIdeas.Repository" Version="2.2.0" />
     <PackageReference Include="Mapster" Version="7.3.0" />
     <PackageReference Include="MediatR.Extensions.FluentValidation.AspNetCore" Version="2.0.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />

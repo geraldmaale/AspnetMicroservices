@@ -18,7 +18,7 @@ public static class MigrationExtension<TContext>
         logger.LogInformation("Migrating database to Postgres ...");
 
         // Migrate EF Core
-        using var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        using var context = scope.ServiceProvider.GetRequiredService<DiscountDbContext>();
         context.Database.Migrate();
 
         if (!context.Coupons!.Any())

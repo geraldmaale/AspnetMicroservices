@@ -1,5 +1,8 @@
+using GreatIdeas.MailServices;
 using Ordering.Application;
-using Ordering.Domain;
+using Ordering.Application.Contracts.Infrastructure;
+using Ordering.Infrastructure;
+using Ordering.Infrastructure.Mail;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +14,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddApplicationServices();
+builder.Services.AddInfrastructureServices(builder.Configuration, builder.Environment);
 
 var app = builder.Build();  
 
