@@ -16,7 +16,7 @@ public abstract class ValueObject
         {
             return false;
         }
-        return ReferenceEquals(left, null) || left.Equals(right);
+        return ReferenceEquals(left, null) || left.Equals(right!);
     }
 
     protected static bool NotEqualOperator(ValueObject left, ValueObject right)
@@ -28,6 +28,16 @@ public abstract class ValueObject
 
     public override bool Equals(object obj)
     {
+        if (obj == null)
+        {
+            throw new ArgumentNullException(nameof(obj));
+        }
+
+        if (obj == null)
+        {
+            throw new ArgumentNullException(nameof(obj));
+        }
+
         if (obj == null || obj.GetType() != GetType())
         {
             return false;

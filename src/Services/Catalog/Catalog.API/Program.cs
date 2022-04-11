@@ -5,7 +5,6 @@ using Catalog.API.Validators;
 using FluentValidation.AspNetCore;
 using Serilog;
 using Serilog.Events;
-using Serilog.Sinks.Elasticsearch;
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
@@ -22,7 +21,7 @@ try
     builder.Logging.ClearProviders();
     builder.Host.UseSerilog((context, services, configuration) => configuration
         // .MinimumLevel.Information()
-        // .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+        .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
         .ReadFrom.Configuration(context.Configuration)
         .ReadFrom.Services(services)
         .Enrich.FromLogContext()
@@ -31,13 +30,14 @@ try
         .WriteTo.Console()
         .WriteTo.Seq(builder.Configuration["SeqConfiguration:Uri"])
         .WriteTo.File("logs/catalogapi-logs.log", rollingInterval: RollingInterval.Day)
-        .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(builder.Configuration["ElasticConfiguration:Uri"]))
+        /*.WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(builder.Configuration["ElasticConfiguration:Uri"]))
         {
             AutoRegisterTemplate = true,
             NumberOfShards = 2,
             IndexFormat =
                 $"{builder.Configuration["ApplicationName"]}-logs-{builder.Environment.EnvironmentName?.ToLower().Replace(".", "-")}-{DateTime.UtcNow:yyyy-MM-dd}"
-        }));
+        })*/
+    );
 
     // Add services to the container.
     builder.Services.AddControllers()

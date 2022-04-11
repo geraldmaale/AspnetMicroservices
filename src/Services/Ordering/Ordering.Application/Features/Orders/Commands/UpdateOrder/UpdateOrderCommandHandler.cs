@@ -38,7 +38,7 @@ public class UpdateOrderCommandHandler: IRequestHandler<UpdateOrderCommand>
             }
 
             _mapper.Map(request, orderToUpdate);
-            await _orderRepository.UpdateAsync(orderToUpdate);
+            await _orderRepository.UpdateAsync(orderToUpdate, cancellationToken);
 
             _logger.LogInformation($"Order with id {request.Id} has been successfully updated");
 
@@ -67,7 +67,11 @@ public class UpdateOrderCommandHandler: IRequestHandler<UpdateOrderCommand>
                 From = "Order System"
             };
 
-            await _emailService.UseSendGrid(email);
+            // Using serilog timings
+            // using (Operation.Time("Sending email to user {UserName}", order.UserName))
+            {
+                await _emailService.UseMsGraph(email);
+            }
             
             _logger.LogInformation($"Order email has been sent to {email.To}");
         }

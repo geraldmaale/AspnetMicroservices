@@ -61,11 +61,9 @@ public static class InfrastructureServiceCollection
         services.AddScoped<IOrderRepository, OrderRepository>();
         
         // register email service
-        services.Configure<EmailSettings>(c=> configuration.GetSection(nameof(EmailSettings)));
-        services.AddTransient<ISendGridService, SendGridService>();
-        services.AddScoped<IEmailService, EmailService>();
-
+        services.Configure<EmailSettings>(c=> configuration.GetSection(nameof(EmailSettings))); 
         services.AddMsGraphMailService(configuration);
+        services.AddScoped<IEmailService, EmailService>();
 
         return services;
     }

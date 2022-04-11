@@ -35,7 +35,7 @@ public class DeleteOrderCommandHandler: IRequestHandler<DeleteOrderCommand>
                 throw new NotFoundException(nameof(Order), request.Id);
             }
             
-            await _orderRepository.DeleteAsync(orderToUpdate);
+            await _orderRepository.DeleteAsync(orderToUpdate, cancellationToken);
         
             _logger.LogInformation($"Order with id {request.Id} has been successfully deleted.");
             

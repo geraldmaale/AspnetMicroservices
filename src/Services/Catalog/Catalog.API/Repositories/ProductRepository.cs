@@ -16,7 +16,7 @@ public class ProductRepository : Repository<Product>, IProductRepository
 
     public async Task<IEnumerable<Product>> GetByCategoryAsync(string name)
     {
-        FilterDefinition<Product> filter = Builders<Product>.Filter.Eq(p => p.Category.Name, name);
+        FilterDefinition<Product> filter = Builders<Product>.Filter.Eq(p => p.Category!.Name, name);
 
         var products = await MongoCollection.Find(filter).ToListAsync();
         return products;

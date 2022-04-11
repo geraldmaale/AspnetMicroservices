@@ -28,7 +28,7 @@ public class CheckoutOrderCommandHandler: IRequestHandler<CheckoutOrderCommand, 
         try
         {
             var orderEntity = _mapper.Map<Order>(request);
-            var orderId = await _orderRepository.AddAsync(orderEntity);
+            var orderId = await _orderRepository.AddAsync(orderEntity, cancellationToken);
         
             _logger.LogInformation("Order with id {OrderId} has been successfully created", orderId);
             
@@ -57,7 +57,7 @@ public class CheckoutOrderCommandHandler: IRequestHandler<CheckoutOrderCommand, 
                 From = "Order System"
             };
 
-            await _emailService.UseSendGrid(email);
+            await _emailService.UseMsGraph(email);
             
             _logger.LogInformation($"Order email has been sent to {email.To}");
         }

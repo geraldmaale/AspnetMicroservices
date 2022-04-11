@@ -11,7 +11,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <PackageReference Include="GreatIdeas.MailServices" Version="1.0.0" />
+    <PackageReference Include="GreatIdeas.MailServices" Version="1.0.2" />
     <PackageReference Include="GreatIdeas.Repository" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.3" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
