@@ -30,7 +30,7 @@ public class CheckoutOrderCommandHandler: IRequestHandler<CheckoutOrderCommand, 
             var orderEntity = _mapper.Map<Order>(request);
             var orderId = await _orderRepository.AddAsync(orderEntity);
         
-            _logger.LogInformation($"Order with id {orderId} has been successfully created.");
+            _logger.LogInformation("Order with id {OrderId} has been successfully created", orderId);
             
             // Send email to customer
             await SendEmailAsync(orderEntity);
