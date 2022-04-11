@@ -3,8 +3,10 @@ using Catalog.API.Entities;
 using Catalog.API.Repositories;
 using Catalog.API.Validators;
 using FluentValidation.AspNetCore;
+using Microsoft.ApplicationInsights.Extensibility;
 using Serilog;
 using Serilog.Events;
+using Serilog.Sinks.Elasticsearch;
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
@@ -30,14 +32,22 @@ try
         .WriteTo.Console()
         .WriteTo.Seq(builder.Configuration["SeqConfiguration:Uri"])
         .WriteTo.File("logs/catalogapi-logs.log", rollingInterval: RollingInterval.Day)
-        /*.WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(builder.Configuration["ElasticConfiguration:Uri"]))
+        .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(builder.Configuration["ElasticConfiguration:Uri"]))
         {
             AutoRegisterTemplate = true,
             NumberOfShards = 2,
             IndexFormat =
                 $"{builder.Configuration["ApplicationName"]}-logs-{builder.Environment.EnvironmentName?.ToLower().Replace(".", "-")}-{DateTime.UtcNow:yyyy-MM-dd}"
-        })*/
+        })
+        .WriteTo.ApplicationInsights(builder.Services.BuildServiceProvider().GetRequiredService<TelemetryConfiguration>(), TelemetryConverter.Traces)
     );
+    
+    // Application Insights
+    var instrumentationKey = builder.Configuration["ApplicationInsights:InstrumentationKey"];
+    builder.Services.AddApplicationInsightsTelemetry(options =>
+    {
+        options.InstrumentationKey = instrumentationKey;
+    });
 
     // Add services to the container.
     builder.Services.AddControllers()

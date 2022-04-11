@@ -48,10 +48,10 @@ public class CategoryController : ControllerBase
         }
     }
 
-    [HttpGet("{categoryId:length(24)}", Name = "GetCategory")]
+    [HttpGet("{categoryId:length(24)}", Name = "GetCategoryById")]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ApiResult))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResults<CategoryDto>))]
-    public async Task<IActionResult> GetCategory(string categoryId)
+    public async Task<IActionResult> GetCategoryById(string categoryId)
     {
         try
         {
@@ -61,6 +61,8 @@ public class CategoryController : ControllerBase
                 Log.Error("Category with id {CategoryId} not found", categoryId);
                 return NotFound(new ApiResult() { Message = $"Category was not found" });
             }
+
+            throw new InvalidOperationException("This is a test exception");
 
             Log.Information("{Category} Categories fetch successfully", category.Id);
             return Ok(new ApiResult<CategoryDto>() {
@@ -89,7 +91,7 @@ public class CategoryController : ControllerBase
                 await _categoryRepository.CreateAsync(entity);
 
                 Log.Information("Category: {CategoryName} created successfully", category.Name);
-                return CreatedAtRoute(nameof(GetCategory), new { categoryId = entity.Id }, entity);
+                return CreatedAtRoute(nameof(GetCategoryById), new { categoryId = entity.Id }, entity);
             }
         }
         catch (Exception ex)
