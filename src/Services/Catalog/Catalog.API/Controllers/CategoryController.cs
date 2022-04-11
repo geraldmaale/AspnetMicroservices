@@ -6,6 +6,7 @@ using GreatIdeas.Extensions;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
+using Serilog;
 
 namespace Catalog.API.Controllers;
 
@@ -32,15 +33,18 @@ public class CategoryController : ControllerBase
         try
         {
             var results = await _categoryRepository.GetAllAsync();
+            var categories = _mapper.Map<List<CategoryDto>>(results);
+            _logger.Log(LogLevel.Information, "{CategoriesCount} categories found", categories.Count);
+            
             return Ok(new ApiResults<CategoryDto>() {
                 IsSuccessful = true,
                 Message = "Success",
-                Results = _mapper.Map<IEnumerable<CategoryDto>>(results)
+                Results = categories
             });
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Failed to get results: {ex.Message}");
+            _logger.LogError(ex, "Failed to get results: {Message}", ex.Message);
             return UnprocessableEntity(new ApiResult() { Message = $"Failed to get results" });
         }
     }
@@ -55,10 +59,11 @@ public class CategoryController : ControllerBase
             var category = await _categoryRepository.GetByIdAsync(c => c.Id == categoryId);
             if (category == null)
             {
-                _logger.LogError($"Category with id {categoryId} not found");
-                return NotFound(new ApiResult() { Message = $"Category with id {categoryId} not found" });
+                _logger.LogError("Category with id {CategoryId} not found", categoryId);
+                return NotFound(new ApiResult() { Message = $"Category was not found" });
             }
 
+            _logger.LogInformation("{Category} Categories fetch successfully", category.Id);
             return Ok(new ApiResult<CategoryDto>() {
                 IsSuccessful = true,
                 Result = _mapper.Map<CategoryDto>(category),
@@ -67,8 +72,8 @@ public class CategoryController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Failed to get category: {ex.Message}");
-            return UnprocessableEntity(new ApiResult() { Message = $"Failed to get results: {categoryId}" });
+            _logger.LogError(ex, "Failed to get category: {Message}", ex.Message);
+            return UnprocessableEntity(new ApiResult() { Message = $"Failed to get category: {categoryId}" });
         }
     }
 
@@ -81,12 +86,12 @@ public class CategoryController : ControllerBase
             var entity = _mapper.Map<Category>(category);
             await _categoryRepository.CreateAsync(entity);
 
-            _logger.LogInformation($"Category: {category.Name} created successfully");
+            _logger.LogInformation("Category: {CategoryName} created successfully", category.Name);
             return CreatedAtRoute(nameof(GetCategory), new { categoryId = entity.Id }, entity);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Failed to create category: {ex.Message}");
+            _logger.LogError(ex, "Failed to create category: {Message}", ex.Message);
             return UnprocessableEntity(new ApiResult() { Message = $"Failed to create category" });
         }
     }
@@ -103,17 +108,17 @@ public class CategoryController : ControllerBase
             var result = await _categoryRepository.UpdateAsync(entityToUpdate, FilterId(entityToUpdate.Id));
             if (!result)
             {
-                _logger.LogError($"Failed to update category with id {entityToUpdate.Id}");
+                _logger.LogError("Failed to update category with id {CategoryId}", entityToUpdate.Id);
                 return BadRequest(new ApiResult() { Message = $"Failed to update category with id: {entityToUpdate.Id}" });
             }
 
-            _logger.LogInformation($"Category: {entityToUpdate.Id} updated successfully");
+            _logger.LogInformation("Category: {CategoryId} updated successfully", category.Id);
             return Ok(new ApiResult() { IsSuccessful = true, Message = "Updated successfully" });
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Failed to update category: {ex.Message}");
-            return UnprocessableEntity(new ApiResult() { Message = $"Failed to update results: {category.Id}" });
+            _logger.LogError(ex, "Failed to update category: {Message}", ex.Message);
+            return UnprocessableEntity(new ApiResult() { Message = $"Failed to update category: {category.Id}" });
         }
     }
 
@@ -128,16 +133,16 @@ public class CategoryController : ControllerBase
             var result = await _categoryRepository.DeleteAsync(FilterId(categoryId));
             if (!result)
             {
-                _logger.LogError($"Failed to delete category with id {categoryId}");
+                _logger.LogError("Failed to delete category with id {CategoryId}", categoryId);
                 return BadRequest(new ApiResult() { Message = $"Failed to delete category with id {categoryId}" });
             }
 
-            _logger.LogInformation($"Category: {categoryId} deleted successfully");
+            _logger.LogInformation("Category: {CategoryId} deleted successfully", categoryId);
             return Ok(new ApiResult() { IsSuccessful = true, Message = "Deleted successfully" });
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Failed to delete category: {ex.Message}");
+            _logger.LogError(ex, "Failed to delete category: {Message}", categoryId);
             return UnprocessableEntity(new ApiResult() { Message = $"Failed to delete results: {categoryId}" });
         }
     }

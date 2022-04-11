@@ -4,61 +4,98 @@ services:
   catalogdb:
     image: mongo
     container_name: catalog-mongo-db
+    restart: always
     environment: 
       - MONGO_INITDB_ROOT_USERNAME=appuser
       - MONGO_INITDB_ROOT_PASSWORD=Password1
     ports: 
-      - "27017:27017"
+      - "27018:27017"
     volumes:
       - catalog-mongo-data:/data/db
 
   basketdb:
     image: redis
     container_name: basket-redis-db
-    restart: on-failure
+    restart: always
     ports: 
-      - "6379:6379"
+      - "6378:6379"
     volumes:
       - basket-data:/data
 
   discountdb:
     image: postgres
     container_name: discount-postgres-db
-    restart: on-failure
+    restart: always
     environment: 
       - POSTGRES_USER=appuser
       - POSTGRES_PASSWORD=P@ssword1
     ports: 
-      - "5432:5432"
+      - "5433:5432"
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - discountdb-data:/var/lib/postgresql/data
 
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: pgadmin
-    restart: always
+  # pgadmin:
+  #   image: dpage/pgadmin4
+  #   container_name: pgadmin
+  #   restart: always
+  #   environment:
+  #     - PGADMIN_DEFAULT_EMAIL=geraldmaale@gmail.com
+  #     - PGADMIN_DEFAULT_PASSWORD=P@ssword1
+  #   ports:
+  #     - "5050:80"
+  #   volumes:
+  #     - pgadmin_data:/root/.pgadmin
+
+  # portainer:
+  #   image: portainer/portainer-ce
+  #   container_name: portainer
+  #   restart: always
+  #   ports:
+  #     - "8080:8000"
+  #     - "9443:9443"
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #     - portainer_data:/data
+  
+  elasticsearch:
+    image: elasticsearch:7.13.4
+    container_name: es01
+    ports:
+      - 9200:9200
+      - 9300:9300
+    networks:
+      - elastic
     environment:
-      - PGADMIN_DEFAULT_EMAIL=geraldmaale@gmail.com
-      - PGADMIN_DEFAULT_PASSWORD=P@ssword1
-    ports:
-      - "5050:80"
+      node.name: es01
+      # cluster.name: es-docker-cluster
+      # cluster.initial_master_nodes: es01
+      discovery.type: single-node
+      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+    healthcheck:
+      test: [ "CMD-SHELL", "curl --silent --fail localhost:9200/_cluster/health || exit 1" ]
+      interval: 10s
+      timeout: 10s
+      retries: 3
     volumes:
-      - pgadmin_data:/root/.pgadmin
-
-  portainer:
-    image: portainer/portainer-ce
-    container_name: portainer
-    restart: always
+      - data01:/usr/share/elasticsearch/data
+    
+  kibana:
+    image: kibana:7.13.4
+    container_name: kib01
     ports:
-      - "8080:8000"
-      - "9443:9443"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - portainer_data:/data
+      - 5601:5601
+    environment:
+      ELASTICSEARCH_URL: http://es01:9200
+      ELASTICSEARCH_HOSTS: http://es01:9200
+    networks:
+      - elastic
+    depends_on:
+      - elasticsearch
 
   catalog.api:
     container_name: catalog-api
     image: ${DOCKER_REGISTRY-}catalogapi
+    restart: always
     build:
       context: .
       dockerfile: Services/Catalog/Catalog.API/Dockerfile    
@@ -71,6 +108,7 @@ services:
   basket.api:
     image: ${DOCKER_REGISTRY-}basketapi
     container_name: basket-api
+    restart: always
     build:
       context: .
       dockerfile: Services/Basket/Basket.API/Dockerfile
@@ -85,6 +123,7 @@ services:
   discount.api:
     image: ${DOCKER_REGISTRY-}discountapi
     container_name: discount-api
+    restart: always
     build:
       context: .
       dockerfile: Services/Discount/Discount.API/Dockerfile
@@ -98,6 +137,7 @@ services:
   discount.grpc:
     image: ${DOCKER_REGISTRY-}discountgrpc
     container_name: discount-grpc
+    restart: always
     build:
       context: .
       dockerfile: Services/Discount/Discount.Grpc/Dockerfile
@@ -108,9 +148,13 @@ services:
     ports:
       - "8003:80"
 
+networks:
+  elastic:
+    driver: bridge
+
 volumes:
-  catalog-mongo-data:   
+  catalog-mongo-data:
   basket-data:
-  portainer_data:
-  pgdata:
-  pgadmin_data:
+  discountdb-data:
+  data01:
+    driver: local
