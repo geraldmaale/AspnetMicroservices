@@ -1,7 +1,7 @@
 ﻿using Ordering.Domain.Entities;
 
 namespace Ordering.Application.Contracts.Persistence;
-public interface IOrderRepository : IAsyncRepository<Order>
+public interface IOrderRepository : IRepositoryBase<Order>
 {
-    Task<IEnumerable<Order>> GetOrdersByUsernameAsync(string userName);
+    Task<IEnumerable<Order>> GetOrdersByUsernameAsync(string userName, CancellationToken cancellationToken);
 }

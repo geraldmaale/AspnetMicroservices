@@ -8,7 +8,7 @@ namespace Ordering.Infrastructure.Respositories;
 
 #nullable disable
 
-public class RepositoryBase<TEntity>: IAsyncRepository<TEntity> where TEntity:EntityBase
+public class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where TEntity : EntityBase
 {
     protected readonly OrderDbContext DbContext;
 
@@ -23,46 +23,54 @@ public class RepositoryBase<TEntity>: IAsyncRepository<TEntity> where TEntity:En
         return results;
     }
 
-    public async Task<TEntity> GetByIdAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<TEntity>> GetAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
     {
-        var results = await DbContext.Set<TEntity>().Where(predicate).FirstOrDefaultAsync(cancellationToken);
+        var results = await DbContext.Set<TEntity>().AsNoTracking().Where(predicate).ToListAsync(cancellationToken);
         return results;
     }
 
-    /*public async Task<IReadOnlyList<TEntity>> GetByIdAsync(Expression<Func<TEntity, 
-            bool>> predicate = null, Func<IQueryable<TEntity>, 
-            IOrderedQueryable<TEntity>> orderBy = null, string includeString = null,
+    public async Task<IReadOnlyList<TEntity>> GetAllAsync(Expression<Func<TEntity,
+            bool>> predicate = null, Func<IQueryable<TEntity>,
+            IOrderedQueryable<TEntity>> orderBy = null, string include = null,
+        bool disableTracking = true)
+    {
+        IQueryable<TEntity> query = DbContext.Set<TEntity>();
+        if (disableTracking)
+            query = query.AsNoTracking();
+        if (predicate != null)
+            query = query.Where(predicate);
+        if (!string.IsNullOrWhiteSpace(include))
+            query = query.Include(include);
+        if (orderBy != null)
+            return await orderBy(query).ToListAsync();
+
+        return await query.ToListAsync();
+    }
+
+    public async Task<IReadOnlyList<TEntity>> GetAllAsync(Expression<Func<TEntity,
+        bool>> predicate = null, Func<IQueryable<TEntity>,
+        IOrderedQueryable<TEntity>> orderBy = null,
+        List<Expression<Func<TEntity, object>>> includes = null,
         bool disableTracking = true)
     {
         IQueryable<TEntity> source = DbContext.Set<TEntity>();
         if (disableTracking)
             source = source.AsNoTracking();
+        if (includes != null)
+            source = includes.Aggregate(source, (current, include) => current.Include(include));
         if (predicate != null)
             source = source.Where(predicate);
         if (orderBy != null)
             return await orderBy(source).ToListAsync();
-        
-        return await source.ToListAsync();
-    }*/
 
-    // public async Task<List<TEntity>> GetByIdAsync(Expression<Func<TEntity,
-    //     bool>> predicate = null, Func<IQueryable<TEntity>, 
-    //     IOrderedQueryable<TEntity>> orderBy = null, 
-    //     List<Expression<Func<TEntity, object>>> includes = null, 
-    //     bool disableTracking = true)
-    // {
-    //     IQueryable<TEntity> source = DbContext.Set<TEntity>();
-    //     if (disableTracking)
-    //         source = source.AsNoTracking();
-    //     if (includes != null)
-    //         source = includes.Aggregate(source, (current, include) => current.Include(include));
-    //     if (predicate != null)
-    //         source = source.Where(predicate);
-    //     if (orderBy != null)
-    //         return await orderBy(source).ToListAsync();
-    //     
-    //     return await source.ToListAsync();
-    // }
+        return await source.ToListAsync();
+    }
+
+    public async Task<TEntity> GetByIdAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
+    {
+        var results = await DbContext.Set<TEntity>().Where(predicate).FirstOrDefaultAsync(cancellationToken);
+        return results;
+    }
 
     public async Task<TEntity> GetByIdAsync(Guid id)
     {

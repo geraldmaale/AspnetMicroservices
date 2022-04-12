@@ -2,46 +2,46 @@
 
 namespace Ordering.Application.Features.Orders.Commands.CheckoutOrder;
 
-public class CheckoutOrderCommandValidator: AbstractValidator<CheckoutOrderCommand>
+public class CheckoutOrderCommandValidator : AbstractValidator<CheckoutOrderCommand>
 {
     public CheckoutOrderCommandValidator()
     {
         RuleFor(co => co.UserName)
             .NotEmpty()
-            .WithMessage("Username cannot be empty")
+            .WithMessage("{Username} cannot be empty")
             .MaximumLength(50)
-            .WithMessage("Username cannot exceed 50 characters");
+            .WithMessage("{Username} cannot exceed 50 characters");
 
         RuleFor(co => co.FirstName)
             .NotEmpty()
-            .WithMessage("First Name is required")
+            .WithMessage("{FirstName} is required")
             .MaximumLength(15)
-            .WithMessage("First Name cannot exceed 15 characters");
-        
+            .WithMessage("{FirstName} cannot exceed 15 characters");
+
         RuleFor(co => co.LastName)
             .NotEmpty()
-            .WithMessage("Last Name is required")
+            .WithMessage("{LastName} is required")
             .MaximumLength(15)
-            .WithMessage("Last Name cannot exceed 15 characters");
+            .WithMessage("{LastName} cannot exceed 15 characters");
 
         RuleFor(co => co.EmailAddress)
             .NotEmpty()
-            .WithMessage("Email Address is required")
+            .WithMessage("{EmailAddress} is required")
             .EmailAddress()
-            .WithMessage("Email address is not valid");
+            .WithMessage("{EmailAddress} is not valid");
 
         RuleFor(co => co.Country)
             .NotEmpty()
             .WithMessage("Country is required");
-        
+
         RuleFor(co => co.State)
             .NotEmpty()
             .WithMessage("State is required");
-        
+
         RuleFor(co => co.ZipCode)
             .NotEmpty()
             .WithMessage("ZipCode is required");
-        
+
         RuleFor(co => co.AddressLine)
             .NotEmpty()
             .WithMessage("AddressLine1 is required");
@@ -57,7 +57,7 @@ public class CheckoutOrderCommandValidator: AbstractValidator<CheckoutOrderComma
             .WithMessage("CVV is required")
             .Length(3, 4)
             .WithMessage("CVV must be 3 or 4 characters");
-        
+
         RuleFor(co => co.CardNumber)
             .NotEmpty()
             .WithMessage("CardNumber is required")

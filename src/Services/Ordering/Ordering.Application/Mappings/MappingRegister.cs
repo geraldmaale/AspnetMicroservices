@@ -12,11 +12,12 @@ public class MappingRegister : IRegister
         // Map OrderDto
         config.NewConfig<Order, OrderDto>()
             .GenerateMapper(MapType.Map | MapType.MapToTarget | MapType.Projection);
-        
-        // Map Order Command
+
+        // Map CheckoutOrder Command
         config.NewConfig<Order, CheckoutOrderCommand>()
             .GenerateMapper(MapType.Map | MapType.MapToTarget | MapType.Projection);
-        
+
+        // Map UpdateOrder Command
         config.NewConfig<Order, UpdateOrderCommand>()
             .GenerateMapper(MapType.Map | MapType.MapToTarget | MapType.Projection);
     }

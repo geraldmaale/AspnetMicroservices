@@ -1,9 +1,12 @@
 using Catalog.API.Data;
 using Catalog.API.Entities;
+using Catalog.API.Extensions;
 using Catalog.API.Repositories;
 using Catalog.API.Validators;
 using FluentValidation.AspNetCore;
+using Microsoft.ApplicationInsights.Channel;
 using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.Elasticsearch;
@@ -16,38 +19,10 @@ Log.Logger = new LoggerConfiguration()
 
 try
 {
-    Log.Information("Starting web host ...");
     var builder = WebApplication.CreateBuilder(args);
-
-    // Full setup of serilog logging
-    builder.Logging.ClearProviders();
-    builder.Host.UseSerilog((context, services, configuration) => configuration
-        // .MinimumLevel.Information()
-        .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-        .ReadFrom.Configuration(context.Configuration)
-        .ReadFrom.Services(services)
-        .Enrich.FromLogContext()
-        .Enrich.WithMachineName()
-        .Enrich.WithProperty("Environment", builder.Environment.EnvironmentName)
-        .WriteTo.Console()
-        .WriteTo.Seq(builder.Configuration["SeqConfiguration:Uri"])
-        .WriteTo.File("logs/catalogapi-logs.log", rollingInterval: RollingInterval.Day)
-        .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(builder.Configuration["ElasticConfiguration:Uri"]))
-        {
-            AutoRegisterTemplate = true,
-            NumberOfShards = 2,
-            IndexFormat =
-                $"{builder.Configuration["ApplicationName"]}-logs-{builder.Environment.EnvironmentName?.ToLower().Replace(".", "-")}-{DateTime.UtcNow:yyyy-MM-dd}"
-        })
-        .WriteTo.ApplicationInsights(builder.Services.BuildServiceProvider().GetRequiredService<TelemetryConfiguration>(), TelemetryConverter.Traces)
-    );
     
-    // Application Insights
-    var instrumentationKey = builder.Configuration["ApplicationInsights:InstrumentationKey"];
-    builder.Services.AddApplicationInsightsTelemetry(options =>
-    {
-        options.InstrumentationKey = instrumentationKey;
-    });
+    // Add logging
+    builder.AddLoggingServices();
 
     // Add services to the container.
     builder.Services.AddControllers()
@@ -70,7 +45,7 @@ try
     CatalogContextSeed.SeedData(productCollection, categoryCollection);
 
     var app = builder.Build();
-    
+
     // Configure the HTTP request pipeline.
     if (app.Environment.IsDevelopment())
     {
@@ -78,8 +53,7 @@ try
         app.UseSwaggerUI();
     }
 
-    app.UseSerilogRequestLogging(config =>
-    {
+    app.UseSerilogRequestLogging(config => {
         config.MessageTemplate =
             "HTTP {RequestMethod} {RequestPath} {UserId} responded {StatusCode} in {Elapsed:0.0000} ms";
     });

@@ -3,5 +3,5 @@
 namespace Ordering.Application.Contracts.Infrastructure;
 public interface IEmailService
 {
-    Task<bool> UseMsGraph(Email email);
+    Task<bool> SendEmail(Email email);
 }

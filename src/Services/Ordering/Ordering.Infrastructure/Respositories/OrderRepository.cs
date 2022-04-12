@@ -5,16 +5,18 @@ using Ordering.Infrastructure.Data;
 
 namespace Ordering.Infrastructure.Respositories;
 
-public class OrderRepository: RepositoryBase<Order>, IOrderRepository
+public class OrderRepository : RepositoryBase<Order>, IOrderRepository
 {
     public OrderRepository(OrderDbContext dbContext) : base(dbContext)
     {
     }
 
-    public async Task<IEnumerable<Order>> GetOrdersByUsernameAsync(string userName)
+    public async Task<IEnumerable<Order>> GetOrdersByUsernameAsync(string userName, CancellationToken cancellationToken)
     {
-        return await DbContext.Orders!
+        var ordersByUser = await DbContext.Orders!
             .Where(o => o.UserName == userName)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
+
+        return ordersByUser;
     }
 }

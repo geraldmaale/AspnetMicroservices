@@ -70,7 +70,7 @@ public class UpdateOrderCommandHandler: IRequestHandler<UpdateOrderCommand>
             // Using serilog timings
             // using (Operation.Time("Sending email to user {UserName}", order.UserName))
             {
-                await _emailService.UseMsGraph(email);
+                await _emailService.SendEmail(email);
             }
             
             _logger.LogInformation($"Order email has been sent to {email.To}");

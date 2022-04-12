@@ -57,7 +57,7 @@ public class CheckoutOrderCommandHandler: IRequestHandler<CheckoutOrderCommand, 
                 From = "Order System"
             };
 
-            await _emailService.UseMsGraph(email);
+            await _emailService.SendEmail(email);
             
             _logger.LogInformation($"Order email has been sent to {email.To}");
         }

@@ -1,9 +1,9 @@
 version: '3.4'
 
 services:
-  catalogdb:
+  mongoserver:
     image: mongo
-    container_name: catalog-mongo-db
+    container_name: mongo-server
     restart: always
     environment: 
       - MONGO_INITDB_ROOT_USERNAME=appuser
@@ -11,20 +11,20 @@ services:
     ports: 
       - "27018:27017"
     volumes:
-      - catalog-mongo-data:/data/db
+      - mongo-data:/data/db
 
-  basketdb:
+  rediserver:
     image: redis
-    container_name: basket-redis-db
+    container_name: redis-server
     restart: always
     ports: 
       - "6378:6379"
     volumes:
-      - basket-data:/data
+      - redis-data:/data
 
-  discountdb:
+  postgreserver:
     image: postgres
-    container_name: discount-postgres-db
+    container_name: postgres-server
     restart: always
     environment: 
       - POSTGRES_USER=appuser
@@ -32,7 +32,7 @@ services:
     ports: 
       - "5433:5432"
     volumes:
-      - discountdb-data:/var/lib/postgresql/data
+      - postgresql-data:/var/lib/postgresql/data
 
   # pgadmin:
   #   image: dpage/pgadmin4
@@ -57,40 +57,6 @@ services:
   #     - /var/run/docker.sock:/var/run/docker.sock
   #     - portainer_data:/data
   
-  elasticsearch:
-    image: elasticsearch:7.13.4
-    container_name: es01
-    ports:
-      - 9200:9200
-      - 9300:9300
-    networks:
-      - elastic
-    environment:
-      node.name: es01
-      # cluster.name: es-docker-cluster
-      # cluster.initial_master_nodes: es01
-      discovery.type: single-node
-      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
-    healthcheck:
-      test: [ "CMD-SHELL", "curl --silent --fail localhost:9200/_cluster/health || exit 1" ]
-      interval: 10s
-      timeout: 10s
-      retries: 3
-    volumes:
-      - data01:/usr/share/elasticsearch/data
-    
-  kibana:
-    image: kibana:7.13.4
-    container_name: kib01
-    ports:
-      - 5601:5601
-    environment:
-      ELASTICSEARCH_URL: http://es01:9200
-      ELASTICSEARCH_HOSTS: http://es01:9200
-    networks:
-      - elastic
-    depends_on:
-      - elasticsearch
 
   catalog.api:
     container_name: catalog-api
@@ -100,7 +66,7 @@ services:
       context: .
       dockerfile: Services/Catalog/Catalog.API/Dockerfile    
     environment:
-      - "DatabaseSettings:Credentials=mongodb://appuser:Password1@catalogdb:27017"
+      - "DatabaseSettings:Credentials=mongodb://appuser:Password1@mongoserver:27018"
       - "DatabaseSettings:DatabaseName=CatalogDb"
     ports:
       - "8000:80"
@@ -113,10 +79,10 @@ services:
       context: .
       dockerfile: Services/Basket/Basket.API/Dockerfile
     environment:
-      - "Redis:ConnectionString=basketdb:6379"
+      - "Redis:ConnectionString=rediserver:6378"
       - "GrpcSettings:DiscountUrl=http://discount.grpc"
     depends_on:
-     - basketdb
+     - rediserver
     ports:
       - "8001:80"
 
@@ -128,9 +94,9 @@ services:
       context: .
       dockerfile: Services/Discount/Discount.API/Dockerfile
     environment:
-      - "DatabaseSettings:ConnectionString=Server=discountdb;Port=5432;Database=DiscountDb;User Id=appuser;Password=P@ssword1;"
+      - "DatabaseSettings:ConnectionString=Server=postgreserver;Port=5432;Database=DiscountDb;User Id=appuser;Password=P@ssword1;"
     depends_on:
-     - discountdb
+     - postgreserver
     ports:
       - "8002:80"
   
@@ -142,19 +108,27 @@ services:
       context: .
       dockerfile: Services/Discount/Discount.Grpc/Dockerfile
     environment:
-      - "DatabaseSettings:ConnectionString=Server=discountdb;Port=5432;Database=DiscountDb;User Id=appuser;Password=P@ssword1;"
+      - "DatabaseSettings:ConnectionString=Server=postgreserver;Port=5432;Database=DiscountDb;User Id=appuser;Password=P@ssword1;"
     depends_on:
-      - discountdb
+      - postgreserver
     ports:
       - "8003:80"
-
-networks:
-  elastic:
-    driver: bridge
+      
+  orders.api:
+    image: ${DOCKER_REGISTRY-}orderapi
+    container_name: order-api
+    restart: always
+    build:
+      context: .
+      dockerfile: Services/Ordering/Ordering.API/Dockerfile
+    environment:
+      - "DatabaseSettings:ConnectionString=Server=postgreserver;Port=5432;Database=OrdersDb;User Id=appuser;Password=P@ssword1;"
+    depends_on:
+      - postgreserver
+    ports:
+      - "8004:80"
 
 volumes:
-  catalog-mongo-data:
-  basket-data:
-  discountdb-data:
-  data01:
-    driver: local
+  mongo-data:
+  postgresql-data:
+  redis-data:
