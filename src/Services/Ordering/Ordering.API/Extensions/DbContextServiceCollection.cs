@@ -13,7 +13,7 @@ public static class DbContextServiceCollection
 {
     private static DbProviders DbProvider { get; set; } = DbProviders.Postgres;
 
-    public static IServiceCollection RegisterDbContextService(this IServiceCollection services,
+    public static IServiceCollection AddDbContextService(this IServiceCollection services,
         IConfiguration configuration, IWebHostEnvironment environment)
     {
         // register the OrderContext

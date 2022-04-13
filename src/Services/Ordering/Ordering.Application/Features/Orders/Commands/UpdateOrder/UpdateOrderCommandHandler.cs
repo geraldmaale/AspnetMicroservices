@@ -1,31 +1,29 @@
-﻿using GreatIdeas.Extensions;
-using MapsterMapper;
+﻿using MapsterMapper;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Ordering.Application.Contracts.Infrastructure;
 using Ordering.Application.Contracts.Persistence;
 using Ordering.Application.Exceptions;
-using Ordering.Application.Features.Orders.Commands.CheckoutOrder;
 using Ordering.Application.Models;
 using Ordering.Domain.Entities;
 
 namespace Ordering.Application.Features.Orders.Commands.UpdateOrder;
 
-public class UpdateOrderCommandHandler: IRequestHandler<UpdateOrderCommand>
+public class UpdateOrderCommandHandler : IRequestHandler<UpdateOrderCommand>
 {
     private readonly IOrderRepository _orderRepository;
     private readonly IEmailService _emailService;
     private readonly ILogger<UpdateOrderCommandHandler> _logger;
     private IMapper _mapper = new Mapper();
 
-    public UpdateOrderCommandHandler(IOrderRepository orderRepository, IEmailService emailService, 
+    public UpdateOrderCommandHandler(IOrderRepository orderRepository, IEmailService emailService,
         ILogger<UpdateOrderCommandHandler> logger)
     {
         _orderRepository = orderRepository ?? throw new ArgumentNullException(nameof(orderRepository));
         _emailService = emailService ?? throw new ArgumentNullException(nameof(emailService));
         _logger = logger;
     }
-    
+
     public async Task<Unit> Handle(UpdateOrderCommand request, CancellationToken cancellationToken)
     {
         try
@@ -34,7 +32,7 @@ public class UpdateOrderCommandHandler: IRequestHandler<UpdateOrderCommand>
             if (orderToUpdate == null)
             {
                 _logger.LogError($"Order with id: {request.Id} was not found.");
-                throw new NotFoundException(nameof(Order), request.Id);
+                throw new OrderNotFoundException(request.Id);
             }
 
             _mapper.Map(request, orderToUpdate);
@@ -59,8 +57,7 @@ public class UpdateOrderCommandHandler: IRequestHandler<UpdateOrderCommand>
         try
         {
             // Send order email
-            var email = new Email()
-            {
+            var email = new Email() {
                 To = "geraldmaale@hotmail.com",
                 Subject = "Order update confirmation",
                 Body = $"Your order with Order Id: {order.Id} has been successfully updated.",
@@ -72,7 +69,7 @@ public class UpdateOrderCommandHandler: IRequestHandler<UpdateOrderCommand>
             {
                 await _emailService.SendEmail(email);
             }
-            
+
             _logger.LogInformation($"Order email has been sent to {email.To}");
         }
         catch (Exception e)

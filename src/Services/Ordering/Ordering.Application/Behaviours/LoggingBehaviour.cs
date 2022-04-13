@@ -24,9 +24,11 @@ public class LoggingBehaviour<TRequest, TResponse>: IPipelineBehavior<TRequest, 
             var propValue = prop.GetValue(request, null);
             _logger.LogInformation("{Property} : {@Value}", prop.Name, propValue);
         }
-        var response = await next();
+        
         //Response
+        var response = await next();       
         _logger.LogInformation("Handled {TResponse}", typeof(TResponse).Name);
+        
         return response;
     }
 }

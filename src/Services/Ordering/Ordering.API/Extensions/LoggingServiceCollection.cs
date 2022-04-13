@@ -2,6 +2,7 @@
 using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.Elasticsearch;
+using SerilogTimings;
 
 namespace Ordering.API.Extensions;
 

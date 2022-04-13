@@ -1,4 +1,5 @@
 using Ordering.API.Extensions;
+using Ordering.API.Middlewares;
 using Ordering.Application;
 using Ordering.Infrastructure;
 using Ordering.Infrastructure.Data;
@@ -13,16 +14,16 @@ Log.Logger = new LoggerConfiguration()
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Add logging services
 builder.AddLoggingServices();
+builder.Services.AddTransient<ExceptionHandlingMiddleware>();
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services
-    .RegisterDbContextService(builder.Configuration, builder.Environment)
+    .AddDbContextService(builder.Configuration, builder.Environment)
     .AddInfrastructureServices(builder.Configuration)
     .AddApplicationServices();
 
@@ -34,10 +35,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 app.UseSerilogRequestLogging(config => {
     config.MessageTemplate =
         "HTTP {RequestMethod} {RequestPath} {UserId} responded {StatusCode} in {Elapsed:0.0000} ms";
 });
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 // Add migrations
 MigrationExtension<OrderDbContext>.MigrateDatabase(app);

@@ -63,7 +63,7 @@ public class OrdersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ApiResult))]
     public async Task<IActionResult> DeleteOrder(Guid id)
     {
-        var command = new DeleteOrderCommand() { Id = id };
+        var command = new DeleteOrderCommand(id);
         await _mediator.Send(command);
 
         return Ok(new ApiResult {
