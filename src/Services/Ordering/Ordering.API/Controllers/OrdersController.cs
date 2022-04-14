@@ -58,7 +58,7 @@ public class OrdersController : ControllerBase
         });
     }
 
-    [HttpPut("{id}", Name = "DeleteOrder")]
+    [HttpDelete("{id}", Name = "DeleteOrder")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResult))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ApiResult))]
     public async Task<IActionResult> DeleteOrder(Guid id)

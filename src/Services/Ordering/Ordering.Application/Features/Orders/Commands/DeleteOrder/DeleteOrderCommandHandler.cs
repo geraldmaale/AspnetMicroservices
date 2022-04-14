@@ -39,10 +39,14 @@ public class DeleteOrderCommandHandler : IRequestHandler<DeleteOrderCommand>
 
             return Unit.Value;
         }
+        catch (OrderNotFoundException)
+        {
+            throw new OrderNotFoundException(request.Id);
+        }
         catch (Exception e)
         {
-            _logger.LogError(e, e.Message);
-            throw new Exception($"Checkout order update failed for {request.Id}");
+            _logger.LogError(e, "An error occured while deleting order.");
+            throw new Exception($"Order deletion failed for {request.Id}");
         }
     }
 }

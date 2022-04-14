@@ -1,134 +1,62 @@
 version: '3.4'
 
 services:
+
   mongoserver:
-    image: mongo
-    container_name: mongo-server
-    restart: always
-    environment: 
-      - MONGO_INITDB_ROOT_USERNAME=appuser
-      - MONGO_INITDB_ROOT_PASSWORD=Password1
-    ports: 
-      - "27018:27017"
-    volumes:
-      - mongo-data:/data/db
+    image: mongo    
 
   rediserver:
     image: redis
-    container_name: redis-server
-    restart: always
-    ports: 
-      - "6378:6379"
-    volumes:
-      - redis-data:/data
+    
 
   postgreserver:
     image: postgres
-    container_name: postgres-server
-    restart: always
-    environment: 
-      - POSTGRES_USER=appuser
-      - POSTGRES_PASSWORD=P@ssword1
-    ports: 
-      - "5433:5432"
-    volumes:
-      - postgresql-data:/var/lib/postgresql/data
 
-  # pgadmin:
-  #   image: dpage/pgadmin4
-  #   container_name: pgadmin
-  #   restart: always
-  #   environment:
-  #     - PGADMIN_DEFAULT_EMAIL=geraldmaale@gmail.com
-  #     - PGADMIN_DEFAULT_PASSWORD=P@ssword1
-  #   ports:
-  #     - "5050:80"
-  #   volumes:
-  #     - pgadmin_data:/root/.pgadmin
 
-  # portainer:
-  #   image: portainer/portainer-ce
-  #   container_name: portainer
-  #   restart: always
-  #   ports:
-  #     - "8080:8000"
-  #     - "9443:9443"
-  #   volumes:
-  #     - /var/run/docker.sock:/var/run/docker.sock
-  #     - portainer_data:/data
-  
+  pgadmin:
+    image: dpage/pgadmin4
 
-  catalog.api:
-    container_name: catalog-api
-    image: ${DOCKER_REGISTRY-}catalogapi
-    restart: always
-    build:
-      context: .
-      dockerfile: Services/Catalog/Catalog.API/Dockerfile    
-    environment:
-      - "DatabaseSettings:Credentials=mongodb://appuser:Password1@mongoserver:27018"
-      - "DatabaseSettings:DatabaseName=CatalogDb"
-    ports:
-      - "8000:80"
+    
+  portainer:
+    image: portainer/portainer-ce
 
+    
+  rabbitmq:
+    image: rabbitmq:3.9-management
+
+    
+  elastic01:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.16.1
+
+    
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.16.1
+
+    
   basket.api:
     image: ${DOCKER_REGISTRY-}basketapi
-    container_name: basket-api
-    restart: always
     build:
       context: .
       dockerfile: Services/Basket/Basket.API/Dockerfile
-    environment:
-      - "Redis:ConnectionString=rediserver:6378"
-      - "GrpcSettings:DiscountUrl=http://discount.grpc"
-    depends_on:
-     - rediserver
-    ports:
-      - "8001:80"
 
-  discount.api:
-    image: ${DOCKER_REGISTRY-}discountapi
-    container_name: discount-api
-    restart: always
+      
+  catalog.api:
+    image: ${DOCKER_REGISTRY-}catalogapi
     build:
       context: .
-      dockerfile: Services/Discount/Discount.API/Dockerfile
-    environment:
-      - "DatabaseSettings:ConnectionString=Server=postgreserver;Port=5432;Database=DiscountDb;User Id=appuser;Password=P@ssword1;"
-    depends_on:
-     - postgreserver
-    ports:
-      - "8002:80"
-  
+      dockerfile: Services/Catalog/Catalog.API/Dockerfile
+
+
   discount.grpc:
     image: ${DOCKER_REGISTRY-}discountgrpc
-    container_name: discount-grpc
-    restart: always
     build:
       context: .
       dockerfile: Services/Discount/Discount.Grpc/Dockerfile
-    environment:
-      - "DatabaseSettings:ConnectionString=Server=postgreserver;Port=5432;Database=DiscountDb;User Id=appuser;Password=P@ssword1;"
-    depends_on:
-      - postgreserver
-    ports:
-      - "8003:80"
-      
-  orders.api:
-    image: ${DOCKER_REGISTRY-}orderapi
-    container_name: order-api
-    restart: always
+
+
+  ordering.api:
+    image: ${DOCKER_REGISTRY-}orderingapi
     build:
       context: .
       dockerfile: Services/Ordering/Ordering.API/Dockerfile
-    environment:
-      - "DatabaseSettings:ConnectionString=Server=postgreserver;Port=5432;Database=OrdersDb;User Id=appuser;Password=P@ssword1;"
-    depends_on:
-      - postgreserver
-    ports:
-      - "8004:80"
 
-volumes:
-  mongo-data:
-  postgresql-data:
-  redis-data:

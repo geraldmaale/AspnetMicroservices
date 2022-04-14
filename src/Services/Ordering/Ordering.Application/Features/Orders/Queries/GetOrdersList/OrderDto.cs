@@ -1,4 +1,4 @@
-﻿using Ordering.Domain.Entities;
+﻿using EventBus.Messages.Commons;
 
 namespace Ordering.Application.Features.Orders.Queries.GetOrdersList;
 

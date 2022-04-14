@@ -1,3 +1,7 @@
+using System.Reflection;
+using Core.Logging;
+using EventBus.Messages.Events;
+using Mapster;
 using Ordering.API.Extensions;
 using Ordering.API.Middlewares;
 using Ordering.Application;
@@ -26,6 +30,12 @@ builder.Services
     .AddDbContextService(builder.Configuration, builder.Environment)
     .AddInfrastructureServices(builder.Configuration)
     .AddApplicationServices();
+builder.AddMassTransitWithConsumerServices();
+
+// Mapster Mapping
+TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly());
+
+builder.Services.AddScoped<BasketCheckoutEvent>();
 
 var app = builder.Build();
 
@@ -41,6 +51,8 @@ app.UseSerilogRequestLogging(config => {
         "HTTP {RequestMethod} {RequestPath} {UserId} responded {StatusCode} in {Elapsed:0.0000} ms";
 });
 
+// Use logging service middleware
+app.UseLoggingMiddleware();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 // Add migrations

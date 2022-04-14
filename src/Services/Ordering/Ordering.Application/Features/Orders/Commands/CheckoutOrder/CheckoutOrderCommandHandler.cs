@@ -8,14 +8,14 @@ using Ordering.Domain.Entities;
 
 namespace Ordering.Application.Features.Orders.Commands.CheckoutOrder;
 
-public class CheckoutOrderCommandHandler: IRequestHandler<CheckoutOrderCommand, Guid>
+public class CheckoutOrderCommandHandler : IRequestHandler<CheckoutOrderCommand, Guid>
 {
     private readonly IOrderRepository _orderRepository;
     private readonly IEmailService _emailService;
     private readonly ILogger<CheckoutOrderCommandHandler> _logger;
     private IMapper _mapper = new Mapper();
 
-    public CheckoutOrderCommandHandler(IOrderRepository orderRepository, IEmailService emailService, 
+    public CheckoutOrderCommandHandler(IOrderRepository orderRepository, IEmailService emailService,
         ILogger<CheckoutOrderCommandHandler> logger)
     {
         _orderRepository = orderRepository ?? throw new ArgumentNullException(nameof(orderRepository));
@@ -28,14 +28,14 @@ public class CheckoutOrderCommandHandler: IRequestHandler<CheckoutOrderCommand, 
         try
         {
             var orderEntity = _mapper.Map<Order>(request);
-            var orderId = await _orderRepository.AddAsync(orderEntity, cancellationToken);
-        
-            _logger.LogInformation("Order with id {OrderId} has been successfully created", orderId);
-            
+            var createdOrder = await _orderRepository.AddAsync(orderEntity, cancellationToken);
+
+            _logger.LogInformation("Order with id {OrderId} has been successfully created", createdOrder.Id);
+
             // Send email to customer
             await SendEmailAsync(orderEntity);
-            
-            return orderId.Id;
+
+            return createdOrder.Id;
         }
         catch (Exception e)
         {
@@ -49,21 +49,20 @@ public class CheckoutOrderCommandHandler: IRequestHandler<CheckoutOrderCommand, 
         try
         {
             // Send order email
-            var email = new Email()
-            {
-                To = "geraldmaale@hotmail.com",
+            var email = new Email() {
+                To = order.EmailAddress,
                 Subject = "Order confirmation",
                 Body = $"Your order with Order Id: {order.Id} has been successfully created.",
                 From = "Order System"
             };
 
             await _emailService.SendEmail(email);
-            
-            _logger.LogInformation($"Order email has been sent to {email.To}");
+
+            _logger.LogInformation("Order email has been sent to {UserEmail}", order.EmailAddress);
         }
         catch (Exception e)
         {
-            _logger.LogError(e, $"Order {order.Id} email sending failed for {order.UserName}");
+            _logger.LogError(e, "Order {OrderId} email sending failed for {UserName}", order.Id, order.UserName);
         }
     }
 }

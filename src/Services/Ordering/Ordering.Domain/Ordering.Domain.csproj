@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Core\EventBus.Messages\EventBus.Messages.csproj" />
+  </ItemGroup>
+
 </Project>

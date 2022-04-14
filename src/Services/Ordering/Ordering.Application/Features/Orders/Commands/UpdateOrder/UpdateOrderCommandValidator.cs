@@ -2,7 +2,7 @@
 
 namespace Ordering.Application.Features.Orders.Commands.UpdateOrder;
 
-public class UpdateOrderCommandValidator: AbstractValidator<UpdateOrderCommand>
+public class UpdateOrderCommandValidator : AbstractValidator<UpdateOrderCommand>
 {
     public UpdateOrderCommandValidator()
     {
@@ -17,7 +17,7 @@ public class UpdateOrderCommandValidator: AbstractValidator<UpdateOrderCommand>
             .WithMessage("First Name is required")
             .MaximumLength(15)
             .WithMessage("First Name cannot exceed 15 characters");
-        
+
         RuleFor(co => co.LastName)
             .NotEmpty()
             .WithMessage("Last Name is required")
@@ -33,36 +33,36 @@ public class UpdateOrderCommandValidator: AbstractValidator<UpdateOrderCommand>
         RuleFor(co => co.Country)
             .NotEmpty()
             .WithMessage("Country is required");
-        
+
         RuleFor(co => co.State)
             .NotEmpty()
             .WithMessage("State is required");
-        
+
         RuleFor(co => co.ZipCode)
             .NotEmpty()
             .WithMessage("ZipCode is required");
-        
+
         RuleFor(co => co.AddressLine)
             .NotEmpty()
             .WithMessage("AddressLine1 is required");
-        
+
         RuleFor(co => co.CVV)
             .NotEmpty()
             .WithMessage("CVV is required")
             .Length(3, 4)
             .WithMessage("CVV must be 3 or 4 characters");
-        
+
         RuleFor(co => co.CardNumber)
             .NotEmpty()
             .WithMessage("CardNumber is required")
             .Length(12, 19)
             .WithMessage("CardNumber must be between 12 and 19 characters");
-        
+
         RuleFor(co => co.CardName)
             .NotEmpty()
             .WithMessage("CardName is required")
-            .Length(50)
-            .WithMessage("CardName must be 50 characters");
+            .Length(5, 50)
+            .WithMessage("CardName must be between 5 and 50 characters");
         RuleFor(co => co.Expiration)
             .NotEmpty()
             .WithMessage("Expiration is required")

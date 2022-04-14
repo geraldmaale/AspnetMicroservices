@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EventBus.Messages.Commons;
+using Microsoft.EntityFrameworkCore;
 using Ordering.Domain.Entities;
 using Ordering.Infrastructure.Data;
 
@@ -22,13 +23,12 @@ public static class MigrationExtension<TContext>
             logger.LogInformation("Seeding into database ...");
 
             // create dummy data
-            var order = new Order()
-            {
+            var order = new Order() {
                 FirstName = "Test",
                 LastName = "User",
                 UserName = "gematt",
                 EmailAddress = "test@email.com",
-                AddressLine = "123 Main Street",        
+                AddressLine = "123 Main Street",
                 State = "WA",
                 ZipCode = "98101",
                 Country = "USA",

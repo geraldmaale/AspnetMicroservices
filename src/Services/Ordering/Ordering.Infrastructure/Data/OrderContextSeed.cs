@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using EventBus.Messages.Commons;
 using Microsoft.Extensions.Logging;
 using Ordering.Domain.Entities;
 
@@ -15,7 +15,7 @@ public class OrderContextSeed
             {
                 orderContext.Orders?.AddRange(GetPreconfiguredOrders());
                 await orderContext.SaveChangesAsync();
-                
+
                 logger.LogInformation("Seed databases completed ...");
             }
         }

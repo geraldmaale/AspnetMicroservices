@@ -1,4 +1,5 @@
-﻿using Ordering.Domain.Common;
+﻿using EventBus.Messages.Commons;
+using Ordering.Domain.Common;
 
 namespace Ordering.Domain.Entities;
 public record Order : EntityBase
@@ -23,9 +24,3 @@ public record Order : EntityBase
     public PaymentMethod PaymentMethod { get; set; }
 }
 
-public enum PaymentMethod
-{
-    CreditCard,
-    PayPal,
-    Cash
-}

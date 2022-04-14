@@ -67,8 +67,8 @@ public class CheckoutOrderCommandValidator : AbstractValidator<CheckoutOrderComm
         RuleFor(co => co.CardName)
             .NotEmpty()
             .WithMessage("CardName is required")
-            .Length(50)
-            .WithMessage("CardName must be 50 characters");
+            .Length(5, 50)
+            .WithMessage("CardName must be between 5 and 50 characters");
 
         RuleFor(co => co.TotalPrice)
             .NotEmpty()

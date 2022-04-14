@@ -62,8 +62,6 @@ public class CategoryController : ControllerBase
                 return NotFound(new ApiResult() { Message = $"Category was not found" });
             }
 
-            throw new InvalidOperationException("This is a test exception");
-
             Log.Information("{Category} Categories fetch successfully", category.Id);
             return Ok(new ApiResult<CategoryDto>() {
                 IsSuccessful = true,

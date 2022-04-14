@@ -1,5 +1,5 @@
-﻿using MediatR;
-using Ordering.Domain.Entities;
+﻿using EventBus.Messages.Commons;
+using MediatR;
 
 namespace Ordering.Application.Features.Orders.Commands.UpdateOrder;
 
@@ -20,4 +20,4 @@ public record UpdateOrderCommand
     string? Expiration,
     string? CVV,
     PaymentMethod PaymentMethod
-): IRequest;
+) : IRequest;
