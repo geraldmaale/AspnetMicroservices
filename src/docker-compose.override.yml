@@ -1,0 +1,196 @@
+version: '3.4'
+
+services:
+
+  mongoserver:
+    image: mongo
+    container_name: mongo-server
+    restart: always
+    environment: 
+      - MONGO_INITDB_ROOT_USERNAME=appuser
+      - MONGO_INITDB_ROOT_PASSWORD=Password1
+    ports: 
+      - "27018:27017"
+    volumes:
+      - mongo-data:/data/db
+
+      
+  rediserver:
+    image: redis
+    container_name: redis-server
+    restart: always
+    ports: 
+      - "6378:6379"
+    volumes:
+      - redis-data:/data
+
+      
+  postgreserver:
+    image: postgres
+    container_name: postgres-server
+    restart: always
+    environment: 
+      - POSTGRES_USER=appuser
+      - POSTGRES_PASSWORD=P@ssword1
+    ports: 
+      - "5433:5432"
+    volumes:
+      - postgresql-data:/var/lib/postgresql/data
+
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    restart: always
+    environment:
+    - PGADMIN_DEFAULT_EMAIL=geraldmaale@gmail.com
+    - PGADMIN_DEFAULT_PASSWORD=P@ssword1
+    ports:
+    - "5051:80"
+    volumes:
+    - pgadmin-data:/root/.pgadmin
+
+       
+  portainer:
+    image: portainer/portainer-ce
+    container_name: portainer
+    restart: always
+    ports:
+    - "8081:8000"
+    - "9444:9443"
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+    - portainer-data:/data
+
+  rabbitmq:
+    image: rabbitmq:3.9-management
+    container_name: rabbitmq
+    restart: always
+    environment:
+      - RABBITMQ_DEFAULT_USER=appuser
+      - RABBITMQ_DEFAULT_PASS=P@ssword1
+    ports:
+      - "5673:5672"
+      - "15673:15672"
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+
+  seq:
+    image: datalust/seq
+    container_name: seq
+    restart: always
+    environment:
+      - ACCEPT_EULA=Y
+    ports:
+      - "5343:80"
+    volumes:
+      - seq_data:/data
+
+  elastic01:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.16.1
+    container_name: elastic01
+    restart: always    
+    environment:
+      - node.name=es01
+      - xpack.monitoring.enabled=true
+      - xpack.watcher.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - discovery.type=single-node
+    volumes:
+      - elastic-data01:/usr/share/elasticsearch/data
+    ports:
+      - "9201:9200"
+    networks:
+      - elasticnetwork
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.16.1
+    container_name: kibana01
+    restart: always
+    ports:
+      - "5602:5601"
+    environment:
+      - "ELASTICSEARCH_URL=http://elastic01:9201"
+      - "ELASTICSEARCH_HOSTS=http://elastic01:9201"      
+    networks:
+      - elasticnetwork
+
+  basket.api:
+    container_name: basket-api  
+    restart: always  
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "Redis:ConnectionString=rediserver:6378"
+      - "GrpcSettings:DiscountUrl=http://discount.grpc"
+      - "RabbitMq:HostName=rabbitmq"
+      - "RabbitMq:Port=5673"
+      - "RabbitMq:UserName=appuser"
+      - "RabbitMq:Password=P@ssword1"
+      - "ElasticConfiguration:Uri=http://elastic01:9201"
+      - "SeqConfiguration:Uri=http://seq:5343"
+    ports:
+      - "8001:80"
+    depends_on:
+      - rediserver
+
+  catalog.api:
+    container_name: catalog-api  
+    restart: always    
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - "DatabaseSettings:Credentials=mongodb://appuser:Password1@mongoserver:27018"
+      - "DatabaseSettings:DatabaseName=CatalogDb"
+    ports:
+      - "8000:80"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    depends_on:
+      - mongoserver
+
+  discount.grpc:
+    container_name: discount-grpc  
+    restart: always 
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - "DatabaseSettings:ConnectionString=Server=postgreserver;Port=5432;Database=DiscountDb;User Id=appuser;Password=P@ssword1;"
+    ports:
+      - "8003:80"
+      - "9003:443"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    depends_on:
+      - postgreserver
+
+  ordering.api:
+    container_name: ordering-api
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "DatabaseSettings:ConnectionString=Server=postgreserver;Port=5432;Database=OrdersDb;User Id=appuser;Password=P@ssword1;"
+      - "RabbitMq:HostName=rabbitmq"
+      - "RabbitMq:Port=5673"
+      - "RabbitMq:UserName=appuser"
+      - "RabbitMq:Password=P@ssword1"
+      - "ElasticConfiguration:Uri=http://elastic01:9201"
+      - "SeqConfiguration:Uri=http://seq:5343"
+    ports:
+      - "8004:80"
+
+volumes:
+  mongo-data:
+  postgresql-data:
+  redis-data:
+  portainer-data:
+  pgadmin-data:
+  seq_data:
+  elastic-data01:
+    driver: local
+  rabbitmq-data:
+
+networks:
+  elasticnetwork:
+    driver: bridge 
