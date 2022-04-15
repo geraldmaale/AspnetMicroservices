@@ -21,6 +21,18 @@ public class DiscountController : ControllerBase
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
+    [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResults<Coupon>))]
+    public async Task<IActionResult> Get()
+    {
+        var discounts = await _discountDapperRepository.GetAllAsync();
+        return Ok(new ApiResults<Coupon>
+        {
+            IsSuccessful = true,
+            Results = discounts,
+            Message = "Success"
+        });
+    }
 
     [HttpGet("{productName}", Name = "GetDiscount")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResult<Coupon>))]

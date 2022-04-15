@@ -15,6 +15,13 @@ public class DiscountDapperRepository : IDiscountDapperRepository
         {
             _connection = connection;
         }
+    }   
+    
+    public async Task<List<Coupon>> GetAllAsync()
+    {
+        var sql = "SELECT * FROM coupons";
+        var result = await _connection.QueryAsync<Coupon>(sql);
+        return result.ToList();
     }
 
     public async Task<Coupon> GetByProductNameAsync(string productName)

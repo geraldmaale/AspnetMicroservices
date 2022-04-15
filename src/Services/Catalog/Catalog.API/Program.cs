@@ -4,12 +4,8 @@ using Catalog.API.Extensions;
 using Catalog.API.Repositories;
 using Catalog.API.Validators;
 using FluentValidation.AspNetCore;
-using Microsoft.ApplicationInsights.Channel;
-using Microsoft.ApplicationInsights.Extensibility;
-using Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel;
 using Serilog;
 using Serilog.Events;
-using Serilog.Sinks.Elasticsearch;
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
