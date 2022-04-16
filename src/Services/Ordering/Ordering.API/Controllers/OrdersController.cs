@@ -58,12 +58,12 @@ public class OrdersController : ControllerBase
         });
     }
 
-    [HttpDelete("{id}", Name = "DeleteOrder")]
+    [HttpDelete("{orderId}", Name = "DeleteOrder")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResult))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ApiResult))]
-    public async Task<IActionResult> DeleteOrder(Guid id)
+    public async Task<IActionResult> DeleteOrder(Guid orderId)
     {
-        var command = new DeleteOrderCommand(id);
+        var command = new DeleteOrderCommand(orderId);
         await _mediator.Send(command);
 
         return Ok(new ApiResult {

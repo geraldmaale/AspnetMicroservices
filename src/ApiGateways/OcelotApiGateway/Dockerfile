@@ -7,17 +7,17 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["Services/Catalog/Catalog.API/Catalog.API.csproj", "Services/Catalog/Catalog.API/"]
+COPY ["ApiGateways/OcelotApiGateway/OcelotApiGateway.csproj", "ApiGateways/OcelotApiGateway/"]
 COPY ["Core/Core.Logging/Core.Logging.csproj", "Core/Core.Logging/"]
-RUN dotnet restore "Services/Catalog/Catalog.API/Catalog.API.csproj"
+RUN dotnet restore "ApiGateways/OcelotApiGateway/OcelotApiGateway.csproj"
 COPY . .
-WORKDIR "/src/Services/Catalog/Catalog.API"
-RUN dotnet build "Catalog.API.csproj" -c Release -o /app/build
+WORKDIR "/src/ApiGateways/OcelotApiGateway"
+RUN dotnet build "OcelotApiGateway.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "Catalog.API.csproj" -c Release -o /app/publish
+RUN dotnet publish "OcelotApiGateway.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Catalog.API.dll"]
+ENTRYPOINT ["dotnet", "OcelotApiGateway.dll"]

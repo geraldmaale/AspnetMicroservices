@@ -12,30 +12,69 @@
     <projectFile profileName="IIS Express">Services/Discount/Discount.API/Discount.API.csproj</projectFile>
     <projectFile profileName="OcelotApitGateway">ApiGateways/OcelotApitGateway/OcelotApitGateway.csproj</projectFile>
     <projectFile profileName="IIS Express">ApiGateways/OcelotApitGateway/OcelotApitGateway.csproj</projectFile>
+    <projectFile profileName="OcelotGw">ApiGateways/OcelotGw/OcelotGw.csproj</projectFile>
+    <projectFile profileName="IIS Express">ApiGateways/OcelotGw/OcelotGw.csproj</projectFile>
+    <projectFile profileName="OcelotApitGateway">ApiGateways/OcelotApiGateway/OcelotApiGateway.csproj</projectFile>
+    <projectFile profileName="IIS Express">ApiGateways/OcelotApiGateway/OcelotApiGateway.csproj</projectFile>
+    <projectFile profileName="OcelotApiGateway">ApiGateways/OcelotApiGateway/OcelotApiGateway.csproj</projectFile>
   </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6af4b519-ab34-465a-9e79-00bf308618ad" name="Changes" comment="">
+    <list default="true" id="6af4b519-ab34-465a-9e79-00bf308618ad" name="Changes" comment="Added Ocelot gateway API project">
+      <change afterPath="$PROJECT_DIR$/ApiGateways/OcelotApiGateway/ocelot.Production.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ShoppingMicroservices/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ShoppingMicroservices/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ApiGateways/OcelotApitGateway/OcelotApitGateway.csproj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ApiGateways/OcelotApitGateway/Program.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ApiGateways/OcelotApitGateway/Properties/launchSettings.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ApiGateways/OcelotApitGateway/appsettings.Development.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ApiGateways/OcelotApitGateway/appsettings.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/Core.Logging/LoggingServiceCollection.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Core.Logging/LoggingServiceCollection.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Services/Basket/Basket.API/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/Services/Basket/Basket.API/appsettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Services/Catalog/Catalog.API/Catalog.API.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Services/Catalog/Catalog.API/Catalog.API.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Services/Catalog/Catalog.API/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Services/Catalog/Catalog.API/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Services/Catalog/Catalog.API/Extensions/LoggingServiceCollection.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Services/Catalog/Catalog.API/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Services/Catalog/Catalog.API/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/Discount/Discount.API/Controllers/DiscountController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Services/Discount/Discount.API/Controllers/DiscountController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/Discount/Discount.Shared/Repositories/DiscountDapperRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Services/Discount/Discount.Shared/Repositories/DiscountDapperRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/Discount/Discount.Shared/Repositories/IDiscountDapperRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Services/Discount/Discount.Shared/Repositories/IDiscountDapperRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Services/Catalog/Catalog.API/appsettings.Development.json" beforeDir="false" afterPath="$PROJECT_DIR$/Services/Catalog/Catalog.API/appsettings.Development.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Services/Catalog/Catalog.API/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/Services/Catalog/Catalog.API/appsettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Services/Discount/Discount.API/Discount.API.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Services/Discount/Discount.API/Discount.API.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Services/Discount/Discount.API/Properties/launchSettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/Services/Discount/Discount.API/Properties/launchSettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Services/Ordering/Ordering.API/Controllers/OrdersController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Services/Ordering/Ordering.API/Controllers/OrdersController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Services/Ordering/Ordering.API/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/Services/Ordering/Ordering.API/appsettings.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ShoppingMicroservices.sln" beforeDir="false" afterPath="$PROJECT_DIR$/ShoppingMicroservices.sln" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.override.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.override.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="tsconfig.json" />
+      </list>
+    </option>
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f0549b4962a66bd5e1817e8eb5fd8cee551e88b1ce4c5196352c5b24d7e6a46/ConfigureWebHostBuilder.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/6cc4cc76547babef243f5335c2876916e707053e03a32eefdaf87f656c0f2e7/RabbitMqHostConfigurationExtensions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/dbb9b76d07e4477885c165cd6116d8cca23880/19/72a2690f/ExceptionDispatchInfo.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/e37c689e2e77b42acd2edb46d10693499cb220a838e09d2cded7db41605c9d/DependencyInjectionRegistrationExtensions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/eb4ade3828da202513d461d6d9e38b43841cca36efe4329187bb2d7c46438/RabbitMqHostConfigurator.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/d82b8ac02bb43d6b94884e283d560e14f18f7caa55c2d41bb0fc59beb77a1d/UriExt.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/d16db2af2f3947aea213105d4f60b38e9000/94/a5b81d8f/SeqLoggerConfigurationExtensions.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://D:/Workspaces/GitHub/ShoppingMicroservices/src/Services/Discount/Discount.API/Controllers/DiscountController.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/457d054ccb280563936a0d6a44376702ccc6e56474c2f63dd188acd2625251/ConnectionFactory.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/575c31ecc35a636b6f962cb71d53992552941a18982aae1c8e6c16305cc3761b/ExceptionDispatchInfo.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
@@ -43,7 +82,9 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectId" id="27nmbT72aNO2PHLssVmKaRWFt9X" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -59,7 +100,15 @@
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
-  <component name="RunManager" selected=".NET Launch Settings Profile.OcelotApitGateway">
+  <component name="RunManager" selected="Compound.Microservices">
+    <configuration name="Microservices" type="CompoundRunConfigurationType">
+      <toRun name="Basket.API" type="LaunchSettings" />
+      <toRun name="Catalog.API" type="LaunchSettings" />
+      <toRun name="Discount.API" type="LaunchSettings" />
+      <toRun name="Discount.Grpc" type="LaunchSettings" />
+      <toRun name="Ordering.API" type="LaunchSettings" />
+      <method v="2" />
+    </configuration>
     <configuration name="Basket.API" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
       <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/Services/Basket/Basket.API/Basket.API.csproj" />
       <option name="LAUNCH_PROFILE_TFM" value="net6.0" />
@@ -165,10 +214,10 @@
         <option name="Build" />
       </method>
     </configuration>
-    <configuration name="OcelotApitGateway" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
-      <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/ApiGateways/OcelotApitGateway/OcelotApitGateway.csproj" />
+    <configuration name="OcelotApiGateway" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
+      <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/ApiGateways/OcelotApiGateway/OcelotApiGateway.csproj" />
       <option name="LAUNCH_PROFILE_TFM" value="net6.0" />
-      <option name="LAUNCH_PROFILE_NAME" value="OcelotApitGateway" />
+      <option name="LAUNCH_PROFILE_NAME" value="OcelotApiGateway" />
       <option name="USE_EXTERNAL_CONSOLE" value="0" />
       <option name="USE_MONO" value="0" />
       <option name="RUNTIME_ARGUMENTS" value="" />
@@ -180,10 +229,10 @@
         <option name="Build" />
       </method>
     </configuration>
-    <configuration name="OcelotApitGateway: IIS Express" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
-      <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/ApiGateways/OcelotApitGateway/OcelotApitGateway.csproj" />
+    <configuration name="OcelotApiGateway: IIS Express" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
+      <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/ApiGateways/OcelotApiGateway/OcelotApiGateway.csproj" />
       <option name="LAUNCH_PROFILE_TFM" value="net6.0" />
-      <option name="LAUNCH_PROFILE_NAME" value="IIS Express" />
+      <option name="LAUNCH_PROFILE_NAME" value="OcelotApiGateway" />
       <option name="USE_EXTERNAL_CONSOLE" value="0" />
       <option name="USE_MONO" value="0" />
       <option name="RUNTIME_ARGUMENTS" value="" />
@@ -233,6 +282,21 @@
       </deployment>
       <method v="2" />
     </configuration>
+    <list>
+      <item itemvalue=".NET Launch Settings Profile.Basket.API" />
+      <item itemvalue=".NET Launch Settings Profile.Basket.API: IIS Express" />
+      <item itemvalue=".NET Launch Settings Profile.Catalog.API" />
+      <item itemvalue=".NET Launch Settings Profile.Catalog.API: IIS Express" />
+      <item itemvalue=".NET Launch Settings Profile.Discount.API" />
+      <item itemvalue=".NET Launch Settings Profile.Discount.API: IIS Express" />
+      <item itemvalue=".NET Launch Settings Profile.Discount.Grpc" />
+      <item itemvalue=".NET Launch Settings Profile.Ordering.API" />
+      <item itemvalue=".NET Launch Settings Profile.Ordering.API: IIS Express" />
+      <item itemvalue=".NET Launch Settings Profile.OcelotApiGateway: IIS Express" />
+      <item itemvalue=".NET Launch Settings Profile.OcelotApiGateway" />
+      <item itemvalue="Compound.Microservices" />
+      <item itemvalue="Docker.docker-compose.yml: Compose Deployment" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="Docker.docker-compose.yml: Compose Deployment" />
@@ -248,7 +312,7 @@
       <option name="presentableId" value="Default" />
       <updated>1649964298675</updated>
       <workItem from="1649964328032" duration="8294000" />
-      <workItem from="1650012895635" duration="2199000" />
+      <workItem from="1650012895635" duration="26565000" />
     </task>
     <task id="LOCAL-00001" summary="Added message brokers (RabbitMQ and Masstransit) to Basket.API and Ordering.API">
       <created>1649970767146</created>
@@ -264,7 +328,14 @@
       <option name="project" value="LOCAL" />
       <updated>1649970797092</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Added Ocelot gateway API project">
+      <created>1650024982050</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1650024982050</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -287,7 +358,8 @@
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="Added message brokers (RabbitMQ and Masstransit) to Basket.API and Ordering.API" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added message brokers (RabbitMQ and Masstransit) to Basket.API and Ordering.API" />
+    <MESSAGE value="Added Ocelot gateway API project" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added Ocelot gateway API project" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

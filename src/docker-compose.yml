@@ -21,7 +21,7 @@ services:
     image: portainer/portainer-ce
 
     
-  rabbitmq:
+  rabbitmq-server:
     image: rabbitmq:3.9-management
 
     
@@ -46,6 +46,14 @@ services:
       context: .
       dockerfile: Services/Catalog/Catalog.API/Dockerfile
 
+      
+
+  discount.api:
+    image: ${DOCKER_REGISTRY-}discountapi
+    build:
+      context: .
+      dockerfile: Services/Discount/Discount.API/Dockerfile
+
 
   discount.grpc:
     image: ${DOCKER_REGISTRY-}discountgrpc
@@ -59,4 +67,12 @@ services:
     build:
       context: .
       dockerfile: Services/Ordering/Ordering.API/Dockerfile
+
+
+
+  ocelotapigateway:
+    image: ${DOCKER_REGISTRY-}ocelotapigateway
+    build:
+      context: .
+      dockerfile: ApiGateways/OcelotApiGateway/Dockerfile
 

@@ -12,8 +12,7 @@ services:
     ports: 
       - "27018:27017"
     volumes:
-      - mongo-data:/data/db
-
+      - mongo-data:/data/db      
       
   rediserver:
     image: redis
@@ -22,8 +21,7 @@ services:
     ports: 
       - "6378:6379"
     volumes:
-      - redis-data:/data
-
+      - redis-data:/data      
       
   postgreserver:
     image: postgres
@@ -37,7 +35,6 @@ services:
     volumes:
       - postgresql-data:/var/lib/postgresql/data
 
-
   pgadmin:
     image: dpage/pgadmin4
     container_name: pgadmin
@@ -49,7 +46,7 @@ services:
     - "5051:80"
     volumes:
     - pgadmin-data:/root/.pgadmin
-
+       
        
   portainer:
     image: portainer/portainer-ce
@@ -62,18 +59,21 @@ services:
     - /var/run/docker.sock:/var/run/docker.sock
     - portainer-data:/data
 
-  rabbitmq:
+  rabbitmq-server:
     image: rabbitmq:3.9-management
-    container_name: rabbitmq
+    container_name: rabbitmq-server
+    hostname: rabbitmq-server
     restart: always
     environment:
       - RABBITMQ_DEFAULT_USER=appuser
       - RABBITMQ_DEFAULT_PASS=P@ssword1
     ports:
-      - "5673:5672"
-      - "15673:15672"
+      - "5672:5672"
+      - "15672:15672"
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
+    networks:
+      - rabbitmqnetwork
 
   seq:
     image: datalust/seq
@@ -119,11 +119,10 @@ services:
     container_name: basket-api  
     restart: always  
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
       - "Redis:ConnectionString=rediserver:6378"
       - "GrpcSettings:DiscountUrl=http://discount.grpc"
-      - "RabbitMq:HostName=rabbitmq"
-      - "RabbitMq:Port=5673"
+      - "RabbitMq:HostName=rabbitmq-server"
+      - "RabbitMq:Port=5672"
       - "RabbitMq:UserName=appuser"
       - "RabbitMq:Password=P@ssword1"
       - "ElasticConfiguration:Uri=http://elastic01:9201"
@@ -132,36 +131,39 @@ services:
       - "8001:80"
     depends_on:
       - rediserver
+      - rabbitmq-server
+    networks:
+      - rabbitmqnetwork
 
   catalog.api:
     container_name: catalog-api  
     restart: always    
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://+:443;http://+:80
       - "DatabaseSettings:Credentials=mongodb://appuser:Password1@mongoserver:27018"
       - "DatabaseSettings:DatabaseName=CatalogDb"
     ports:
       - "8000:80"
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
     depends_on:
-      - mongoserver
+      - mongoserver    
+ 
+  discount.api:
+    container_name: discount-api
+    restart: always
+    environment:
+      - "DatabaseSettings:ConnectionString=Server=postgreserver;Port=5432;Database=DiscountDb;User Id=appuser;Password=P@ssword1;"
+    ports:
+      - "8002:80"
+      - "9002:443"
+    depends_on:
+      - postgreserver
 
   discount.grpc:
     container_name: discount-grpc  
     restart: always 
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://+:443;http://+:80
       - "DatabaseSettings:ConnectionString=Server=postgreserver;Port=5432;Database=DiscountDb;User Id=appuser;Password=P@ssword1;"
     ports:
       - "8003:80"
-      - "9003:443"
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
     depends_on:
       - postgreserver
 
@@ -169,16 +171,33 @@ services:
     container_name: ordering-api
     restart: always
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
       - "DatabaseSettings:ConnectionString=Server=postgreserver;Port=5432;Database=OrdersDb;User Id=appuser;Password=P@ssword1;"
-      - "RabbitMq:HostName=rabbitmq"
-      - "RabbitMq:Port=5673"
+      - "RabbitMq:HostName=rabbitmq-server"
+      - "RabbitMq:Port=5672"
       - "RabbitMq:UserName=appuser"
       - "RabbitMq:Password=P@ssword1"
       - "ElasticConfiguration:Uri=http://elastic01:9201"
       - "SeqConfiguration:Uri=http://seq:5343"
     ports:
       - "8004:80"
+    depends_on:
+      - postgreserver
+      - rabbitmq-server
+    networks:
+      - rabbitmqnetwork
+      
+  ocelotapigateway:
+    environment:
+      - "ElasticConfiguration:Uri=http://elastic01:9201"
+      - "SeqConfiguration:Uri=http://seq:5343"
+    ports:
+      - "8005:80"
+    depends_on:
+      - catalog-api
+      - discount-api
+      - discount-grpc
+      - ordering-api
+      - basket-api
 
 volumes:
   mongo-data:
@@ -194,3 +213,6 @@ volumes:
 networks:
   elasticnetwork:
     driver: bridge 
+  rabbitmqnetwork:
+    driver: bridge
+

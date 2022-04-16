@@ -1,8 +1,8 @@
 using Catalog.API.Data;
 using Catalog.API.Entities;
-using Catalog.API.Extensions;
 using Catalog.API.Repositories;
 using Catalog.API.Validators;
+using Core.Logging;
 using FluentValidation.AspNetCore;
 using Serilog;
 using Serilog.Events;
