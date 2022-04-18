@@ -1,10 +1,7 @@
 ﻿using System.Reflection;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Events;
@@ -14,15 +11,18 @@ namespace Core.Logging;
 
 public static class LoggingServiceCollection
 {
+    /// <summary>
+    /// Adds the logging services using Serilog and persisting to Seq, Elasticsearch and Application Insights.
+    /// </summary>
+    /// <param name="builder"></param>
     public static void AddLoggingServices(this WebApplicationBuilder builder)
     {
         Log.Information("Starting web host ...");
 
         // Get assembly information
         var currentAssembly = Assembly.GetEntryAssembly();
-        var assemblyName = currentAssembly!.GetName().Name;
-        var loggingName = assemblyName!.Replace(".", "-").ToLower()+"-logs-";
-        var seq = builder.Configuration["SeqConfiguration:Uri"];
+        var assemblyName = currentAssembly!.GetName().Name?.ToLower().Replace(".", "-");
+        var loggingName = $"{assemblyName}-{builder.Environment.EnvironmentName?.ToLower().Substring(0,3)}-logs-";
 
         // Full setup of serilog logging
         builder.Logging.ClearProviders();
@@ -36,12 +36,13 @@ public static class LoggingServiceCollection
             .Enrich.WithProperty("Environment", builder.Environment.EnvironmentName)
             .WriteTo.Console()
             .WriteTo.Seq(builder.Configuration["SeqConfiguration:Uri"])
-            .WriteTo.File($"logs/{loggingName}.log", rollingInterval: RollingInterval.Day)
-            .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(builder.Configuration["ElasticConfiguration:Uri"])) {
+            .WriteTo.File($"logs/{loggingName}.log", rollingInterval: RollingInterval.Day, fileSizeLimitBytes:null)
+            .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(builder.Configuration["ElasticConfiguration:Uri"]))
+            {
                 AutoRegisterTemplate = true,
                 NumberOfShards = 2,
                 IndexFormat =
-                    $"{builder.Configuration["ApplicationName"]}-logs-{builder.Environment.EnvironmentName?.ToLower().Replace(".", "-")}-{DateTime.UtcNow:yyyy-MM-dd}"
+                    $"{loggingName}{DateTime.UtcNow:yyyy-MM-dd}"
             })
             .WriteTo.ApplicationInsights(builder.Services.BuildServiceProvider().GetRequiredService<TelemetryConfiguration>(), TelemetryConverter.Traces, LogEventLevel.Information)
             .WriteTo.ApplicationInsights(builder.Services.BuildServiceProvider().GetRequiredService<TelemetryConfiguration>(), TelemetryConverter.Events, LogEventLevel.Information)
@@ -50,40 +51,25 @@ public static class LoggingServiceCollection
         // Application Insights
         builder.Services.AddApplicationInsightsTelemetry(builder.Configuration);
     }
-    
-    public static void AddLoggingServices(this ILoggingBuilder loggingBuilder, WebApplicationBuilder builder)
+
+
+    /// <summary>
+    /// Add Serilog boostrap to the beginning of Program.cs to call this method before the application runs.
+    /// </summary>
+    public static void AddSerilogBootstrapLogging()
     {
-        Log.Information("Starting web host ...");
-
-        // Get assembly information
-        var currentAssembly = Assembly.GetEntryAssembly();
-        var assemblyName = currentAssembly!.GetName().Name;
-        var loggingName = assemblyName!.Replace(".", "-").ToLower()+"-logs-";
-
-        // Full setup of serilog logging
-        builder.Logging.ClearProviders();
-        builder.Host.UseSerilog((context, services, configuration) => configuration
-            // .MinimumLevel.Information()
+        Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-            .ReadFrom.Configuration(context.Configuration)
-            .ReadFrom.Services(services)
+            .WriteTo.Console()
             .Enrich.FromLogContext()
             .Enrich.WithMachineName()
-            .Enrich.WithProperty("Environment", builder.Environment.EnvironmentName)
-            .WriteTo.Console()
-            .WriteTo.Seq(builder.Configuration["SeqConfiguration:Uri"])
-            .WriteTo.File($"logs/{loggingName}.log", rollingInterval: RollingInterval.Day)
-            .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(builder.Configuration["ElasticConfiguration:Uri"])) {
-                AutoRegisterTemplate = true,
-                NumberOfShards = 2,
-                IndexFormat =
-                    $"{builder.Configuration["ElasticConfiguration:ApplicationName"]}-logs-{builder.Environment.EnvironmentName?.ToLower().Replace(".", "-")}-{DateTime.UtcNow:yyyy-MM-dd}"
-            })
-            .WriteTo.ApplicationInsights(builder.Services.BuildServiceProvider().GetRequiredService<TelemetryConfiguration>(), TelemetryConverter.Traces, LogEventLevel.Information)
-            .WriteTo.ApplicationInsights(builder.Services.BuildServiceProvider().GetRequiredService<TelemetryConfiguration>(), TelemetryConverter.Events, LogEventLevel.Information)
-        );
+            .CreateBootstrapLogger();
+        
+        Log.Information("Starting up ...");
+    }
 
-        // Application Insights
-        builder.Services.AddApplicationInsightsTelemetry(builder.Configuration);
+    public static void AddLoggingServices(this ILoggingBuilder loggingBuilder, WebApplicationBuilder builder)
+    {
+        AddLoggingServices(builder);
     }
 }

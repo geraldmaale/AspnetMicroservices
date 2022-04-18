@@ -17,34 +17,22 @@
     <projectFile profileName="OcelotApitGateway">ApiGateways/OcelotApiGateway/OcelotApiGateway.csproj</projectFile>
     <projectFile profileName="IIS Express">ApiGateways/OcelotApiGateway/OcelotApiGateway.csproj</projectFile>
     <projectFile profileName="OcelotApiGateway">ApiGateways/OcelotApiGateway/OcelotApiGateway.csproj</projectFile>
+    <projectFile profileName="SelfHost">ISP/ShoppingMicroservice.ISP/ShoppingMicroservice.ISP.csproj</projectFile>
   </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6af4b519-ab34-465a-9e79-00bf308618ad" name="Changes" comment="Added Ocelot gateway API project">
-      <change afterPath="$PROJECT_DIR$/ApiGateways/OcelotApiGateway/ocelot.Production.json" afterDir="false" />
+    <list default="true" id="6af4b519-ab34-465a-9e79-00bf308618ad" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/ISP/ShoppingMicroservice.ISP/appsettings.Development.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ShoppingMicroservices/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ShoppingMicroservices/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ApiGateways/OcelotApitGateway/OcelotApitGateway.csproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ApiGateways/OcelotApitGateway/Program.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ApiGateways/OcelotApitGateway/Properties/launchSettings.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ApiGateways/OcelotApitGateway/appsettings.Development.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ApiGateways/OcelotApitGateway/appsettings.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ApiGateways/OcelotApiGateway/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ApiGateways/OcelotApiGateway/Program.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Core/Core.Logging/LoggingServiceCollection.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Core.Logging/LoggingServiceCollection.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/Basket/Basket.API/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/Services/Basket/Basket.API/appsettings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/Catalog/Catalog.API/Catalog.API.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Services/Catalog/Catalog.API/Catalog.API.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/Catalog/Catalog.API/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Services/Catalog/Catalog.API/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/Catalog/Catalog.API/Extensions/LoggingServiceCollection.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/Catalog/Catalog.API/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Services/Catalog/Catalog.API/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/Catalog/Catalog.API/appsettings.Development.json" beforeDir="false" afterPath="$PROJECT_DIR$/Services/Catalog/Catalog.API/appsettings.Development.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/Catalog/Catalog.API/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/Services/Catalog/Catalog.API/appsettings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/Discount/Discount.API/Discount.API.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Services/Discount/Discount.API/Discount.API.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/Discount/Discount.API/Properties/launchSettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/Services/Discount/Discount.API/Properties/launchSettings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/Ordering/Ordering.API/Controllers/OrdersController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Services/Ordering/Ordering.API/Controllers/OrdersController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/Core.Logging/LoggingServiceMiddleware.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Core.Logging/LoggingServiceMiddleware.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Services/Basket/Basket.API/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Services/Basket/Basket.API/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Services/Ordering/Ordering.API/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Services/Ordering/Ordering.API/Program.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Services/Ordering/Ordering.API/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/Services/Ordering/Ordering.API/appsettings.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ShoppingMicroservices.sln" beforeDir="false" afterPath="$PROJECT_DIR$/ShoppingMicroservices.sln" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.override.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.override.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,7 +62,6 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/eb4ade3828da202513d461d6d9e38b43841cca36efe4329187bb2d7c46438/RabbitMqHostConfigurator.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/d82b8ac02bb43d6b94884e283d560e14f18f7caa55c2d41bb0fc59beb77a1d/UriExt.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/d16db2af2f3947aea213105d4f60b38e9000/94/a5b81d8f/SeqLoggerConfigurationExtensions.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://D:/Workspaces/GitHub/ShoppingMicroservices/src/Services/Discount/Discount.API/Controllers/DiscountController.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/457d054ccb280563936a0d6a44376702ccc6e56474c2f63dd188acd2625251/ConnectionFactory.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/575c31ecc35a636b6f962cb71d53992552941a18982aae1c8e6c16305cc3761b/ExceptionDispatchInfo.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
@@ -100,7 +87,7 @@
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
-  <component name="RunManager" selected="Compound.Microservices">
+  <component name="RunManager" selected=".NET Launch Settings Profile.ShoppingMicroservice.ISP: SelfHost">
     <configuration name="Microservices" type="CompoundRunConfigurationType">
       <toRun name="Basket.API" type="LaunchSettings" />
       <toRun name="Catalog.API" type="LaunchSettings" />
@@ -274,6 +261,21 @@
         <option name="Build" />
       </method>
     </configuration>
+    <configuration name="ShoppingMicroservice.ISP: SelfHost" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
+      <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/ISP/ShoppingMicroservice.ISP/ShoppingMicroservice.ISP.csproj" />
+      <option name="LAUNCH_PROFILE_TFM" value="net6.0" />
+      <option name="LAUNCH_PROFILE_NAME" value="SelfHost" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <option name="USE_MONO" value="0" />
+      <option name="RUNTIME_ARGUMENTS" value="" />
+      <option name="GENERATE_APPLICATIONHOST_CONFIG" value="1" />
+      <option name="SHOW_IIS_EXPRESS_OUTPUT" value="0" />
+      <option name="SEND_DEBUG_REQUEST" value="1" />
+      <option name="ADDITIONAL_IIS_EXPRESS_ARGUMENTS" value="" />
+      <method v="2">
+        <option name="Build" />
+      </method>
+    </configuration>
     <configuration name="docker-compose.yml: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
       <deployment type="docker-compose.yml">
         <settings>
@@ -294,6 +296,7 @@
       <item itemvalue=".NET Launch Settings Profile.Ordering.API: IIS Express" />
       <item itemvalue=".NET Launch Settings Profile.OcelotApiGateway: IIS Express" />
       <item itemvalue=".NET Launch Settings Profile.OcelotApiGateway" />
+      <item itemvalue=".NET Launch Settings Profile.ShoppingMicroservice.ISP: SelfHost" />
       <item itemvalue="Compound.Microservices" />
       <item itemvalue="Docker.docker-compose.yml: Compose Deployment" />
     </list>
@@ -312,7 +315,10 @@
       <option name="presentableId" value="Default" />
       <updated>1649964298675</updated>
       <workItem from="1649964328032" duration="8294000" />
-      <workItem from="1650012895635" duration="26565000" />
+      <workItem from="1650012895635" duration="28927000" />
+      <workItem from="1650091771461" duration="5316000" />
+      <workItem from="1650186719843" duration="691000" />
+      <workItem from="1650298319115" duration="293000" />
     </task>
     <task id="LOCAL-00001" summary="Added message brokers (RabbitMQ and Masstransit) to Basket.API and Ordering.API">
       <created>1649970767146</created>

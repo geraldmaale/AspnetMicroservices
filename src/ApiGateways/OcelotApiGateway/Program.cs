@@ -28,7 +28,7 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 // Use logging services
-app.UseLoggingMiddleware();
+app.UseSerilogCustomLoggingMiddleware();
 
 // Use Ocelot
 app.UseOcelot().Wait();

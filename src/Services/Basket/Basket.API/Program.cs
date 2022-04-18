@@ -62,7 +62,7 @@ if (app.Environment.IsDevelopment())
 }
 
 // Use logging service middleware
-app.UseLoggingMiddleware();
+app.UseSerilogCustomLoggingMiddleware();
 
 app.UseAuthorization();
 
