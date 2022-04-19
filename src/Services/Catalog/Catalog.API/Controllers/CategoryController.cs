@@ -4,6 +4,7 @@ using Catalog.API.Entities;
 using Catalog.API.Repositories;
 using GreatIdeas.Extensions;
 using MapsterMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using Serilog;
@@ -16,6 +17,7 @@ namespace Catalog.API.Controllers;
 [Produces(MediaTypeNames.Application.Json)]
 [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(ApiResult))]
 // [ResponseCache(CacheProfileName = Constants.FiveMinutesCacheProfileResponse)]
+[Authorize]
 public class CategoryController : ControllerBase
 {
     private readonly ICategoryRepository _categoryRepository;

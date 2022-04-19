@@ -17,6 +17,7 @@
     <PackageReference Include="Mapster" Version="7.3.0" />
     <PackageReference Include="Marvin.Cache.Headers" Version="6.1.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.20.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.4" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.15.0" />
     <PackageReference Include="MongoDB.Driver" Version="2.15.0" />
     <PackageReference Include="NEST" Version="7.17.1" />
@@ -33,6 +34,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Core\Core.Crosscutting\Core.Crosscutting.csproj" />
     <ProjectReference Include="..\..\..\Core\Core.Logging\Core.Logging.csproj" />
   </ItemGroup>
 

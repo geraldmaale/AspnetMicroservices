@@ -60,7 +60,7 @@ CREATE INDEX "IX_PersistedGrants_SubjectId_ClientId_Type" ON "PersistedGrants" (
 CREATE INDEX "IX_PersistedGrants_SubjectId_SessionId_Type" ON "PersistedGrants" ("SubjectId", "SessionId", "Type");
 
 INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
-VALUES ('20220416080303_Grants', '6.0.4');
+VALUES ('20220419085110_Grants', '6.0.4');
 
 COMMIT;
 

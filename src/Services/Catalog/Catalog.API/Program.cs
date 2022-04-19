@@ -1,11 +1,15 @@
+using System.Text;
 using Catalog.API;
 using Catalog.API.Data;
 using Catalog.API.Entities;
 using Catalog.API.Repositories;
 using Catalog.API.Validators;
+using Core.Crosscutting;
 using Core.Logging;
 using FluentValidation.AspNetCore;
 using Marvin.Cache.Headers;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using Serilog.Events;
 
@@ -32,8 +36,7 @@ try
         {
             validationModelOptions.MustRevalidate = true;
         })
-    );
-    builder.Services.AddResponseCaching();
+    ).AddResponseCaching();
 
     // Add services to the container.
     builder.Services.AddControllers(actions =>
@@ -49,7 +52,27 @@ try
 
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
-
+    
+    // Access Authentication for IDP
+    builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme) // "bearer" token
+        .AddJwtBearer(options =>
+        {
+            options.Authority = "https://localhost:5001/";
+            options.Audience = ApiResourceConstants.CatalogApi;
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = false,
+                ValidIssuer = "https://localhost:5001/",
+                ValidateAudience = false,
+                ValidAudience = ApiResourceConstants.CatalogApi,
+                ValidateLifetime = true,
+                // ValidateIssuerSigningKey = true,
+                ValidTypes = new []{"at+jwt"},
+                // IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("superSecretKey@345"))
+            };
+        });
+    
+    // Add repositories
     builder.Services.AddScoped<ICatalogContext, CatalogContext>();
     builder.Services.AddScoped<IProductRepository, ProductRepository>();
     builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
@@ -83,7 +106,8 @@ try
     // Use caching
     app.UseResponseCaching();
     app.UseHttpCacheHeaders();
-    
+
+    app.UseAuthentication();
     app.UseAuthorization();
     app.MapControllers();
     app.Run();

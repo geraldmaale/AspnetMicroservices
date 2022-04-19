@@ -9,23 +9,23 @@ using Duende.IdentityServer;
 using Duende.IdentityServer.Test;
 using IdentityModel;
 
-namespace ShoppingMicroservice.ISP
-{
-    public class TestUsers
-    {
-        public static List<TestUser> Users
-        {
-            get
-            {
-                var address = new
-                {
-                    street_address = "One Hacker Way",
-                    locality = "Heidelberg",
-                    postal_code = 69118,
-                    country = "Germany"
-                };
+namespace ShoppingMicroservice.ISP;
 
-                return new List<TestUser>
+public class TestUsers
+{
+    public static List<TestUser> Users
+    {
+        get
+        {
+            var address = new
+            {
+                street_address = "One Hacker Way",
+                locality = "Heidelberg",
+                postal_code = 69118,
+                country = "Germany"
+            };
+
+            return new List<TestUser>
             {
                 new TestUser
                 {
@@ -60,7 +60,6 @@ namespace ShoppingMicroservice.ISP
                     }
                 }
             };
-            }
         }
     }
 }

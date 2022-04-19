@@ -311,7 +311,7 @@ CREATE UNIQUE INDEX "IX_IdentityResourceProperties_IdentityResourceId_Key" ON "I
 CREATE UNIQUE INDEX "IX_IdentityResources_Name" ON "IdentityResources" ("Name");
 
 INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
-VALUES ('20220416080307_Configuration', '6.0.4');
+VALUES ('20220419085115_Configuration', '6.0.4');
 
 COMMIT;
 

@@ -3,6 +3,7 @@ using Catalog.API.Entities;
 using Catalog.API.Repositories;
 using GreatIdeas.Extensions;
 using Marvin.Cache.Headers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 
@@ -13,6 +14,7 @@ namespace Catalog.API.Controllers;
 [Produces(MediaTypeNames.Application.Json)]
 [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(ApiResult))]
 // [ResponseCache(CacheProfileName = Constants.FiveMinutesCacheProfileResponse)]
+[Authorize]
 public class ProductsController : ControllerBase
 {
     private readonly IProductRepository _productRepository;

@@ -3,35 +3,34 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace ShoppingMicroservice.ISP.Pages.Admin.IdentityScopes
+namespace ShoppingMicroservice.ISP.Pages.Admin.IdentityScopes;
+
+[SecurityHeaders]
+[Authorize]
+public class NewModel : PageModel
 {
-    [SecurityHeaders]
-    [Authorize]
-    public class NewModel : PageModel
+    private readonly IdentityScopeRepository _repository;
+
+    public NewModel(IdentityScopeRepository repository)
     {
-        private readonly IdentityScopeRepository _repository;
+        _repository = repository;
+    }
 
-        public NewModel(IdentityScopeRepository repository)
+    [BindProperty]
+    public IdentityScopeModel InputModel { get; set; }
+
+    public void OnGet()
+    {
+    }
+
+    public async Task<IActionResult> OnPostAsync()
+    {
+        if (ModelState.IsValid)
         {
-            _repository = repository;
+            await _repository.CreateAsync(InputModel);
+            return RedirectToPage("/Admin/IdentityScopes/Edit", new { id = InputModel.Name });
         }
 
-        [BindProperty]
-        public IdentityScopeModel InputModel { get; set; }
-
-        public void OnGet()
-        {
-        }
-
-        public async Task<IActionResult> OnPostAsync()
-        {
-            if (ModelState.IsValid)
-            {
-                await _repository.CreateAsync(InputModel);
-                return RedirectToPage("/Admin/IdentityScopes/Edit", new { id = InputModel.Name });
-            }
-
-            return Page();
-        }
+        return Page();
     }
 }

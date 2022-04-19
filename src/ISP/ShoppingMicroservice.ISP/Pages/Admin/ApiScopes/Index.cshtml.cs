@@ -3,26 +3,25 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace ShoppingMicroservice.ISP.Pages.Admin.ApiScopes
+namespace ShoppingMicroservice.ISP.Pages.Admin.ApiScopes;
+
+[SecurityHeaders]
+[Authorize]
+public class IndexModel : PageModel
 {
-    [SecurityHeaders]
-    [Authorize]
-    public class IndexModel : PageModel
+    private readonly ApiScopeRepository _repository;
+
+    public IndexModel(ApiScopeRepository repository)
     {
-        private readonly ApiScopeRepository _repository;
+        _repository = repository;
+    }
 
-        public IndexModel(ApiScopeRepository repository)
-        {
-            _repository = repository;
-        }
+    public IEnumerable<ApiScopeSummaryModel> Scopes { get; private set; }
+    public string Filter { get; set; }
 
-        public IEnumerable<ApiScopeSummaryModel> Scopes { get; private set; }
-        public string Filter { get; set; }
-
-        public async Task OnGetAsync(string filter)
-        {
-            Filter = filter;
-            Scopes = await _repository.GetAllAsync(filter);
-        }
+    public async Task OnGetAsync(string filter)
+    {
+        Filter = filter;
+        Scopes = await _repository.GetAllAsync(filter);
     }
 }
