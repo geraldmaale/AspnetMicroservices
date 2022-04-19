@@ -1,9 +1,11 @@
+using Catalog.API;
 using Catalog.API.Data;
 using Catalog.API.Entities;
 using Catalog.API.Repositories;
 using Catalog.API.Validators;
 using Core.Logging;
 using FluentValidation.AspNetCore;
+using Marvin.Cache.Headers;
 using Serilog;
 using Serilog.Events;
 
@@ -19,9 +21,29 @@ try
     
     // Add logging
     builder.AddLoggingServices();
+    
+    // Add Caching
+    builder.Services.AddHttpCacheHeaders((expirationModelOptions) =>
+        {
+            expirationModelOptions.MaxAge = Constants.TwoMinutesCacheResponse;
+            expirationModelOptions.CacheLocation = CacheLocation.Public;
+        },
+        (validationModelOptions =>
+        {
+            validationModelOptions.MustRevalidate = true;
+        })
+    );
+    builder.Services.AddResponseCaching();
 
     // Add services to the container.
-    builder.Services.AddControllers()
+    builder.Services.AddControllers(actions =>
+        {
+            // bind cache profiles
+            // actions.CacheProfiles.Add(Constants.FiveMinutesCacheProfileResponse, new CacheProfile
+            // {
+            //     Duration = 300
+            // });
+        })
         .AddFluentValidation(fv =>
             fv.RegisterValidatorsFromAssemblyContaining<CategoryValidator>());
 
@@ -33,6 +55,7 @@ try
     builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
     builder.Services.AddCors();
+    
 
     // Seed
     var mongoContext = new CatalogContext(builder.Configuration);
@@ -54,7 +77,13 @@ try
             "HTTP {RequestMethod} {RequestPath} {UserId} responded {StatusCode} in {Elapsed:0.0000} ms";
     });
 
+    // Use Cors
     app.UseCors(policy => policy.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
+    
+    // Use caching
+    app.UseResponseCaching();
+    app.UseHttpCacheHeaders();
+    
     app.UseAuthorization();
     app.MapControllers();
     app.Run();

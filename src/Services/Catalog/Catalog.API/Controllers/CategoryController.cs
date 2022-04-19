@@ -15,6 +15,7 @@ namespace Catalog.API.Controllers;
 [ApiController]
 [Produces(MediaTypeNames.Application.Json)]
 [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(ApiResult))]
+// [ResponseCache(CacheProfileName = Constants.FiveMinutesCacheProfileResponse)]
 public class CategoryController : ControllerBase
 {
     private readonly ICategoryRepository _categoryRepository;

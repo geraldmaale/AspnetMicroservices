@@ -2,6 +2,7 @@
 using Catalog.API.Entities;
 using Catalog.API.Repositories;
 using GreatIdeas.Extensions;
+using Marvin.Cache.Headers;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 
@@ -11,6 +12,7 @@ namespace Catalog.API.Controllers;
 [ApiController]
 [Produces(MediaTypeNames.Application.Json)]
 [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(ApiResult))]
+// [ResponseCache(CacheProfileName = Constants.FiveMinutesCacheProfileResponse)]
 public class ProductsController : ControllerBase
 {
     private readonly IProductRepository _productRepository;
@@ -24,6 +26,8 @@ public class ProductsController : ControllerBase
 
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResults<Product>))]
+    [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = Constants.OneMinutesCacheResponse)]
+    // [HttpCacheValidation(MustRevalidate = false)]
     public async Task<IActionResult> GetProducts()
     {
         try
@@ -33,7 +37,7 @@ public class ProductsController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Failed to get products: {ex.Message}");
+            _logger.LogError(ex, "Failed to get products: {Message}", ex.Message);
             return UnprocessableEntity(new ApiResult() { Message = $"Failed to get products" });
         }
     }
@@ -46,16 +50,16 @@ public class ProductsController : ControllerBase
         try
         {
             var product = await _productRepository.GetByIdAsync(p => p.Id == productId);
-            if (product == null)
+            if (product is null)
             {
-                _logger.LogError($"Product with id {productId} not found");
+                _logger.LogError("Product with id {ProductId} not found", productId);
                 return NotFound(new ApiResult() { Message = $"Product with id {productId} not found" });
             }
             return Ok(new ApiResult<Product>() { IsSuccessful = true, Result = product, Message = "Success" });
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Failed to get product: {ex.Message}");
+            _logger.LogError(ex, "Failed to get product: {Message}", ex.Message);
             return UnprocessableEntity(new ApiResult() { Message = $"Failed to get products: {productId}" });
         }
     }
@@ -68,17 +72,18 @@ public class ProductsController : ControllerBase
         try
         {
             var products = await _productRepository.GetByNameAsync(name);
-            if (!products.Any())
+            var enumerable = products.ToList();
+            if (!enumerable.Any())
             {
-                _logger.LogError($"Product with name {name} not found");
+                _logger.LogError("Product with name {ProductName} not found", name);
                 return NotFound(new ApiResult() { Message = $"Product with name {name} not found" });
             }
 
-            return Ok(new ApiResults<Product>() { IsSuccessful = true, Results = products, Message = "Success" });
+            return Ok(new ApiResults<Product>() { IsSuccessful = true, Results = enumerable, Message = "Success" });
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Failed to get product: {ex.Message}");
+            _logger.LogError(ex, "Failed to get product {ProductName}: {Message}", name, ex.Message);
             return UnprocessableEntity(new ApiResult() { Message = $"Failed to get products: {name}" });
         }
     }
@@ -93,14 +98,14 @@ public class ProductsController : ControllerBase
             var products = await _productRepository.GetByCategoryAsync(category);
             if (!products.Any())
             {
-                _logger.LogError($"Product with category {category} not found");
+                _logger.LogError("Product with category {Category} not found", category);
                 return NotFound(new ApiResult() { Message = $"Product with category {category} not found" });
             }
             return Ok(new ApiResults<Product>() { IsSuccessful = true, Results = products, Message = "Success" });
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Failed to get products by category: {ex.Message}");
+            _logger.LogError(ex, "Failed to get products by category: {Message}", ex.Message);
             return UnprocessableEntity(new ApiResult() { Message = $"Failed to get products by category: {category}" });
         }
     }
@@ -112,12 +117,12 @@ public class ProductsController : ControllerBase
         try
         {
             await _productRepository.CreateAsync(product);
-            _logger.LogInformation($"Product: {product.Name} created successfully");
+            _logger.LogInformation("Product: {ProductName} created successfully", product.Name);
             return CreatedAtRoute(nameof(GetProduct), new { productId = product.Id }, product);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Failed to create product: {ex.Message}");
+            _logger.LogError(ex, "Failed to create product: {Message}", ex.Message);
             return UnprocessableEntity(new ApiResult() { Message = $"Failed to create product" });
         }
     }
@@ -133,16 +138,16 @@ public class ProductsController : ControllerBase
             var result = await _productRepository.UpdateAsync(product, FilterId(productId));
             if (!result)
             {
-                _logger.LogError($"Failed to update product with id {productId}");
+                _logger.LogError("Failed to update product with id {ProductId}", productId);
                 return BadRequest(new ApiResult() { Message = $"Failed to update product with id: {productId}" });
             }
 
-            _logger.LogInformation($"Product: {productId} updated successfully");
+            _logger.LogInformation("Product: {ProductId} updated successfully", productId);
             return Ok(new ApiResult() { IsSuccessful = true, Message = "Updated successfully" });
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Failed to update product: {ex.Message}");
+            _logger.LogError(ex, "Failed to update product: {Message}", ex.Message);
             return UnprocessableEntity(new ApiResult() { Message = $"Failed to update products: {productId}" });
         }
     }
@@ -158,16 +163,16 @@ public class ProductsController : ControllerBase
             var result = await _productRepository.DeleteAsync(FilterId(productId));
             if (!result)
             {
-                _logger.LogError($"Failed to delete product with id {productId}");
+                _logger.LogError("Failed to delete product with id {ProductId}", productId);
                 return BadRequest(new ApiResult() { Message = $"Failed to delete product with id {productId}" });
             }
 
-            _logger.LogInformation($"Product: {productId} deleted successfully");
+            _logger.LogInformation("Product: {ProductId} deleted successfully", productId);
             return Ok(new ApiResult() { IsSuccessful = true, Message = "Deleted successfully" });
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Failed to delete product: {ex.Message}");
+            _logger.LogError(ex, "Failed to delete product: {Message}", ex.Message);
             return UnprocessableEntity(new ApiResult() { Message = $"Failed to delete products: {productId}" });
         }
     }
