@@ -31,8 +31,9 @@ var app = builder.Build();
 app.UseSerilogCustomLoggingMiddleware();
 
 // Use Ocelot
-app.UseOcelot().Wait();
+await app.UseOcelot();
 
-app.MapGet("/", () => "Running Ocelot Gateway!!!");
+app.MapGet("/ocelot", () => "Running Ocelot Gateway!!!");
+app.MapGet("/", ()=> "Running Ocelot Gateway!!!");
 
 app.Run();

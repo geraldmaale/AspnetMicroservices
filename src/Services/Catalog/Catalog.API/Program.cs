@@ -53,7 +53,8 @@ try
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
     
-    // Access Authentication for IDP
+    // Access Authentication for Identity Server
+    builder.Services.Configure<M2MClientSettings>(builder.Configuration.GetSection(nameof(M2MClientSettings)));
     builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme) // "bearer" token
         .AddJwtBearer(options =>
         {

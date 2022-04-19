@@ -54,6 +54,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ISP", "ISP", "{9B8D3ECC-7C4
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShoppingMicroservice.ISP", "ISP\ShoppingMicroservice.ISP\ShoppingMicroservice.ISP.csproj", "{6017AC65-15A7-4BE4-B178-CD2FFD36F962}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Clients", "Clients", "{F246AFB7-4FD9-47D7-B63B-CE7EB7B687E7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client.Catalog", "Clients\Client.Catalog\Client.Catalog.csproj", "{0334512D-329B-4DA9-96C0-E21A63D6ADE1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -120,6 +124,10 @@ Global
 		{6017AC65-15A7-4BE4-B178-CD2FFD36F962}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6017AC65-15A7-4BE4-B178-CD2FFD36F962}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6017AC65-15A7-4BE4-B178-CD2FFD36F962}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0334512D-329B-4DA9-96C0-E21A63D6ADE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0334512D-329B-4DA9-96C0-E21A63D6ADE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0334512D-329B-4DA9-96C0-E21A63D6ADE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0334512D-329B-4DA9-96C0-E21A63D6ADE1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -143,6 +151,7 @@ Global
 		{0C92D5C3-D222-47AB-8FF3-01D81DA0896B} = {793C0DF9-3086-424F-8635-F444295BDB59}
 		{8831542D-E4B3-4DCF-95D6-6AAFB8A8749C} = {AE7E6F45-AC8A-4310-ACFC-D00AD70D115C}
 		{6017AC65-15A7-4BE4-B178-CD2FFD36F962} = {9B8D3ECC-7C44-41DD-A186-787443CEE29C}
+		{0334512D-329B-4DA9-96C0-E21A63D6ADE1} = {F246AFB7-4FD9-47D7-B63B-CE7EB7B687E7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {15ED643B-02CF-4CCD-83D4-3E62E414E047}
