@@ -5,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Events;
-using Serilog.Formatting.Json;
 using Serilog.Sinks.Elasticsearch;
 
 namespace Core.Logging;
@@ -23,7 +22,7 @@ public static class LoggingServiceCollection
         // Get assembly information
         var currentAssembly = Assembly.GetEntryAssembly();
         var assemblyName = currentAssembly!.GetName().Name?.ToLower().Replace(".", "-");
-        var loggingName = $"{assemblyName}-{builder.Environment.EnvironmentName?.ToLower().Substring(0,3)}-logs-";
+        var loggingName = $"{assemblyName}-{builder.Environment.EnvironmentName?.ToLower().Substring(0, 3)}-logs-";
 
         // Full setup of serilog logging
         builder.Logging.ClearProviders();
@@ -35,9 +34,9 @@ public static class LoggingServiceCollection
             .Enrich.FromLogContext()
             .Enrich.WithMachineName()
             .Enrich.WithProperty("Environment", builder.Environment.EnvironmentName)
-            .WriteTo.Console(new JsonFormatter())
+            .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}")
             .WriteTo.Seq(builder.Configuration["SeqConfiguration:Uri"])
-            .WriteTo.File($"logs/{loggingName}.log", rollingInterval: RollingInterval.Day, fileSizeLimitBytes:null)
+            .WriteTo.File($"logs/{loggingName}.log", rollingInterval: RollingInterval.Day, fileSizeLimitBytes: null)
             .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(builder.Configuration["ElasticConfiguration:Uri"]))
             {
                 AutoRegisterTemplate = true,
@@ -65,7 +64,7 @@ public static class LoggingServiceCollection
             .Enrich.FromLogContext()
             .Enrich.WithMachineName()
             .CreateBootstrapLogger();
-        
+
         Log.Information("Starting up ...");
     }
 
