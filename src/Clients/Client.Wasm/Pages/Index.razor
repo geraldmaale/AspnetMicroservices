@@ -1,0 +1,36 @@
+﻿@page "/"
+@using System.Security.Claims
+@inject AuthenticationStateProvider authStateProvider
+
+<PageTitle>Index</PageTitle>
+
+
+<div class="text-center">
+    <h2 class="display-4">Welcome</h2>
+</div>
+
+<AuthorizeView>
+    <h1>Your Claims</h1>
+    <dl>
+        @foreach (var claim in ClaimsPrincipal!.Claims)
+        {
+            <dt>@claim.Type</dt>
+            <dd>@claim.Value</dd>
+        }
+    </dl>
+</AuthorizeView>
+
+@code
+{
+    public ClaimsPrincipal? ClaimsPrincipal { get; set; } = new();
+    
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await authStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        if (user.Identity!.IsAuthenticated)
+        {
+            ClaimsPrincipal = user;
+        }
+    }
+}

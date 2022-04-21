@@ -15,7 +15,7 @@ public abstract class Repository<T> : IRepository<T>
         MongoCollection = context.ConnectToMongo<T>(CollectionName);
     }
 
-    public async Task<IEnumerable<T>> GetAllAsync()
+    public virtual async Task<IEnumerable<T>> GetAllAsync()
     {
         var results = await MongoCollection.Find(_ => true).ToListAsync();
         return results;

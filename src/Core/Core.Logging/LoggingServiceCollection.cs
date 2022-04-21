@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Events;
+using Serilog.Formatting.Json;
 using Serilog.Sinks.Elasticsearch;
 
 namespace Core.Logging;
@@ -34,7 +35,7 @@ public static class LoggingServiceCollection
             .Enrich.FromLogContext()
             .Enrich.WithMachineName()
             .Enrich.WithProperty("Environment", builder.Environment.EnvironmentName)
-            .WriteTo.Console()
+            .WriteTo.Console(new JsonFormatter())
             .WriteTo.Seq(builder.Configuration["SeqConfiguration:Uri"])
             .WriteTo.File($"logs/{loggingName}.log", rollingInterval: RollingInterval.Day, fileSizeLimitBytes:null)
             .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(builder.Configuration["ElasticConfiguration:Uri"]))

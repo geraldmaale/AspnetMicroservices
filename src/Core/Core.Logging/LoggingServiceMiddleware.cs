@@ -10,7 +10,7 @@ public static class LoggingServiceMiddleware
         app.UseSerilogRequestLogging(config =>
         {
             config.MessageTemplate =
-                "HTTP {RequestMethod} {RequestPath} {UserId} responded {StatusCode} in {Elapsed:0.0000} ms";
+                "HTTP {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000} ms";
         });
     }
 }

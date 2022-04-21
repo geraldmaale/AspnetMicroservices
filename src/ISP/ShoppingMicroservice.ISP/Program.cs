@@ -5,7 +5,6 @@ using ShoppingMicroservice.ISP;
 // Logging boostrap
 LoggingServiceCollection.AddSerilogBootstrapLogging();
 
-
 try
 {
     var builder = WebApplication.CreateBuilder(args);

@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="Clients\Client.Catalog\Pages\CategoriesList.razor.cs" />
+    <None Include="Clients\Client.Wasm\Pages\Products.razor.cs" />
     <None Include="docker-compose.override.yml">
       <DependentUpon>docker-compose.yml</DependentUpon>
     </None>

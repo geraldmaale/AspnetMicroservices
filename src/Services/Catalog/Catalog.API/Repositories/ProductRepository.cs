@@ -13,7 +13,6 @@ public class ProductRepository : Repository<Product>, IProductRepository
 
     public override string? CollectionName { get; set; } = CatalogContext.ProductCollection;
 
-
     public async Task<IEnumerable<Product>> GetByCategoryAsync(string name)
     {
         FilterDefinition<Product> filter = Builders<Product>.Filter.Eq(p => p.Category!.Name, name);

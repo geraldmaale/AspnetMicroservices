@@ -1,0 +1,28 @@
+﻿@page "/products"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+
+<PageTitle>Products</PageTitle>
+
+<h1>List of Products</h1>
+
+<!-- Table for products-->
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var product in ProductList)
+    {
+        <tr>
+            <td>@product.Name</td>
+            <td>@product.Price</td>
+            <td>@product.Description</td>
+        </tr>
+    }
+    </tbody>
+</table>
