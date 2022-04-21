@@ -3,6 +3,7 @@ using IdentityServer.Pages.Admin.ApiScopes;
 using IdentityServer.Pages.Admin.Clients;
 using IdentityServer.Pages.Admin.IdentityScopes;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,9 +21,15 @@ namespace IdentityServer
             builder.Services.AddDbContext<UserDbContext>(options =>
                 options.UseNpgsql(connectionString));
 
-            builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
+            builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
+            {
+                options.SignIn.RequireConfirmedAccount = true;
+            })
                 .AddEntityFrameworkStores<UserDbContext>()
                 .AddDefaultTokenProviders();
+
+            //builder.Services.AddDefaultIdentity<ApplicationUser>()
+            //.AddEntityFrameworkStores<UserDbContext>();
 
             builder.Services
                 .AddIdentityServer(options =>
@@ -81,6 +88,8 @@ namespace IdentityServer
                 builder.Services.AddTransient<IdentityScopeRepository>();
                 builder.Services.AddTransient<ApiScopeRepository>();
             }
+
+            builder.Services.AddTransient<IEmailSender, DummyEmailSender>();
 
             return builder.Build();
         }

@@ -1,4 +1,4 @@
-﻿using Core.Logging;
+using Core.Logging;
 using IdentityServer;
 using Serilog;
 
@@ -36,3 +36,5 @@ finally
     Log.Information("Shut down complete");
     Log.CloseAndFlush();
 }
+
+
