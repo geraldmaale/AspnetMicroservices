@@ -29,7 +29,7 @@ services:
     restart: always
     environment: 
       - POSTGRES_USER=appuser
-      - POSTGRES_PASSWORD=P@ssword1
+      - POSTGRES_PASSWORD=Pa$$word1
     ports: 
       - "5433:5432"
     volumes:
@@ -41,7 +41,7 @@ services:
     restart: always
     environment:
     - PGADMIN_DEFAULT_EMAIL=geraldmaale@gmail.com
-    - PGADMIN_DEFAULT_PASSWORD=P@ssword1
+    - PGADMIN_DEFAULT_PASSWORD=Pa$$word1
     ports:
     - "5051:80"
     volumes:
@@ -66,7 +66,7 @@ services:
     restart: always
     environment:
       - RABBITMQ_DEFAULT_USER=appuser
-      - RABBITMQ_DEFAULT_PASS=P@ssword1
+      - RABBITMQ_DEFAULT_PASS=Pa$$word1
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -124,7 +124,7 @@ services:
       - "RabbitMq:HostName=rabbitmq-server"
       - "RabbitMq:Port=5672"
       - "RabbitMq:UserName=appuser"
-      - "RabbitMq:Password=P@ssword1"
+      - "RabbitMq:Password=Pa$$word1"
       - "ElasticConfiguration:Uri=http://elastic01:9201"
       - "SeqConfiguration:Uri=http://seq:5343"
     ports:
@@ -150,7 +150,7 @@ services:
     container_name: discount-api
     restart: always
     environment:
-      - "DatabaseSettings:ConnectionString=Server=postgreserver;Port=5432;Database=DiscountDb;User Id=appuser;Password=P@ssword1;"
+      - "DatabaseSettings:ConnectionString=Server=postgreserver;Port=5432;Database=DiscountDb;User Id=appuser;Password=Pa$$word1;"
     ports:
       - "8002:80"
       - "9002:443"
@@ -161,7 +161,7 @@ services:
     container_name: discount-grpc  
     restart: always 
     environment:
-      - "DatabaseSettings:ConnectionString=Server=postgreserver;Port=5432;Database=DiscountDb;User Id=appuser;Password=P@ssword1;"
+      - "DatabaseSettings:ConnectionString=Server=postgreserver;Port=5432;Database=DiscountDb;User Id=appuser;Password=Pa$$word1;"
     ports:
       - "8003:80"
     depends_on:
@@ -171,11 +171,11 @@ services:
     container_name: ordering-api
     restart: always
     environment:
-      - "DatabaseSettings:ConnectionString=Server=postgreserver;Port=5432;Database=OrdersDb;User Id=appuser;Password=P@ssword1;"
+      - "DatabaseSettings:ConnectionString=Server=postgreserver;Port=5432;Database=OrdersDb;User Id=appuser;Password=Pa$$word1;"
       - "RabbitMq:HostName=rabbitmq-server"
       - "RabbitMq:Port=5672"
       - "RabbitMq:UserName=appuser"
-      - "RabbitMq:Password=P@ssword1"
+      - "RabbitMq:Password=Pa$$word1"
       - "ElasticConfiguration:Uri=http://elastic01:9201"
       - "SeqConfiguration:Uri=http://seq:5343"
     ports:

@@ -154,7 +154,7 @@ public class SeedData
                     PhoneNumber = "123456789"
                 };
 
-                var result = userManager.CreateAsync(adminUser, "P@ssword1").Result;
+                var result = userManager.CreateAsync(adminUser, "Pa$$word1").Result;
                 if (!result.Succeeded)
                 {
                     throw new Exception(result.Errors.First().Description);
@@ -192,7 +192,7 @@ public class SeedData
                     PhoneNumber = "133456789"
                 };
 
-                var result = userManager.CreateAsync(user2, "P@ssword1").Result;
+                var result = userManager.CreateAsync(user2, "Pa$$word1").Result;
                 if (!result.Succeeded)
                 {
                     throw new Exception(result.Errors.First().Description);
